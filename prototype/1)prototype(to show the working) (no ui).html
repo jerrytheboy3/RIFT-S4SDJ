@@ -1,0 +1,1934 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Bring Go Pay</title>
+<meta name="description" content="What to bring, when to go and what to pay for government paperwork in Bengaluru.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Doto:wght@700..900&family=Geist+Mono:wght@400..600&family=Instrument+Sans:wght@400..700&display=swap">
+<style>
+/* Layout: one floating glass shell over a slow three-light aurora (bring · go · pay).
+   1180px column. Guides = reading column + sticky trip card. Every "best time" is shown
+   on a dark token board in dot-matrix numerals, like the displays inside a Seva Kendra. */
+:root{
+  color-scheme:dark;
+  --bg:#070b16; --bg-2:#0b1122;
+  --fg:#eef1fa; --fg-2:#aab2c8; --fg-3:#737d97;
+  --line:rgba(190,205,255,.11); --line-2:rgba(190,205,255,.21);
+  --glass:rgba(19,27,50,.52); --glass-2:rgba(34,44,76,.66); --glass-solid:#121a30;
+  --glass-hi:rgba(255,255,255,.07); --shadow:rgba(0,0,0,.6);
+  --hover:rgba(200,212,255,.045); --hover-2:rgba(200,212,255,.09);
+  --scrim:rgba(3,6,14,.6);
+  --bring:#8f9dff; --on-bring:#0a0f1e; --go:#4fd9b9; --pay:#f6bd58;
+  --good:#5bd897; --warn:#ffb163; --bad:#ff7d7d; --info:#8fb8ff;
+  --h0:#153a3c; --h1:#1d6b5e; --h2:#c99b40; --h3:#e8784d; --h4:#ef505b;
+  --board-bg:#04070e; --board-fg:#5ff2cc; --board-dim:#5f7a86; --board-line:rgba(95,242,204,.14);
+  --blob-a:rgba(98,112,255,.40); --blob-b:rgba(46,196,166,.26); --blob-c:rgba(246,174,66,.20);
+  --grain-o:.07; --guilloche:rgba(165,180,255,.22);
+  --btn-bg:#eef1fa; --btn-fg:#0a0f1e; --focus:#b9c3ff;
+  --f-display:"Bricolage Grotesque","Instrument Sans",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --f-dot:"Doto","Geist Mono",ui-monospace,monospace;
+  --r-xl:28px; --r-lg:22px; --r-md:16px; --r-sm:12px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){
+  color-scheme:light;
+  --bg:#eceff6; --bg-2:#e4e8f2;
+  --fg:#0c1226; --fg-2:#454f6b; --fg-3:#737c96;
+  --line:rgba(20,32,80,.10); --line-2:rgba(20,32,80,.19);
+  --glass:rgba(255,255,255,.58); --glass-2:rgba(255,255,255,.82); --glass-solid:#f8f9fc;
+  --glass-hi:rgba(255,255,255,.95); --shadow:rgba(30,42,100,.22);
+  --hover:rgba(30,45,110,.035); --hover-2:rgba(30,45,110,.07);
+  --scrim:rgba(20,28,60,.28);
+  --bring:#4a59e3; --on-bring:#ffffff; --go:#07836a; --pay:#a36505;
+  --good:#11804f; --warn:#b45d06; --bad:#cc3434; --info:#2f63c9;
+  --h0:#d3ebe5; --h1:#a3d8c9; --h2:#f0cd80; --h3:#f19f6e; --h4:#e45e68;
+  --board-bg:#0d1324; --board-fg:#5ff2cc; --board-dim:#6b8590; --board-line:rgba(95,242,204,.16);
+  --blob-a:rgba(110,124,255,.30); --blob-b:rgba(40,190,160,.22); --blob-c:rgba(255,184,77,.26);
+  --grain-o:.09; --guilloche:rgba(60,76,180,.16);
+  --btn-bg:#0c1226; --btn-fg:#f4f6fc; --focus:#4a59e3;
+}}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#eceff6; --bg-2:#e4e8f2;
+  --fg:#0c1226; --fg-2:#454f6b; --fg-3:#737c96;
+  --line:rgba(20,32,80,.10); --line-2:rgba(20,32,80,.19);
+  --glass:rgba(255,255,255,.58); --glass-2:rgba(255,255,255,.82); --glass-solid:#f8f9fc;
+  --glass-hi:rgba(255,255,255,.95); --shadow:rgba(30,42,100,.22);
+  --hover:rgba(30,45,110,.035); --hover-2:rgba(30,45,110,.07);
+  --scrim:rgba(20,28,60,.28);
+  --bring:#4a59e3; --on-bring:#ffffff; --go:#07836a; --pay:#a36505;
+  --good:#11804f; --warn:#b45d06; --bad:#cc3434; --info:#2f63c9;
+  --h0:#d3ebe5; --h1:#a3d8c9; --h2:#f0cd80; --h3:#f19f6e; --h4:#e45e68;
+  --board-bg:#0d1324; --board-fg:#5ff2cc; --board-dim:#6b8590; --board-line:rgba(95,242,204,.16);
+  --blob-a:rgba(110,124,255,.30); --blob-b:rgba(40,190,160,.22); --blob-c:rgba(255,184,77,.26);
+  --grain-o:.09; --guilloche:rgba(60,76,180,.16);
+  --btn-bg:#0c1226; --btn-fg:#f4f6fc; --focus:#4a59e3;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--fg);font:400 15.5px/1.55 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 56px;overflow-x:clip;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
+::selection{background:color-mix(in oklab,var(--bring) 38%,transparent)}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+#view:focus{outline:none}
+h1,h2,h3{text-wrap:balance}
+p{text-wrap:pretty}
+.ic{flex:none;display:block}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:fixed;left:16px;top:-80px;z-index:100;padding:10px 16px;border-radius:999px;background:var(--btn-bg);color:var(--btn-fg);text-decoration:none;font-weight:600}
+.skip:focus{top:calc(12px + env(safe-area-inset-top,0px))}
+
+/* atmosphere */
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.aurora i{position:absolute;display:block;width:72vmax;height:72vmax;border-radius:50%;will-change:transform}
+.aurora .a1{background:radial-gradient(closest-side,var(--blob-a),transparent);left:-24vmax;top:-34vmax;animation:d1 48s var(--ease) infinite alternate}
+.aurora .a2{background:radial-gradient(closest-side,var(--blob-b),transparent);right:-30vmax;top:4vmax;animation:d2 56s var(--ease) infinite alternate}
+.aurora .a3{background:radial-gradient(closest-side,var(--blob-c),transparent);left:14vmax;bottom:-46vmax;animation:d3 62s var(--ease) infinite alternate}
+@keyframes d1{to{transform:translate3d(16vmax,10vmax,0) scale(1.12)}}
+@keyframes d2{to{transform:translate3d(-14vmax,16vmax,0) scale(.9)}}
+@keyframes d3{to{transform:translate3d(10vmax,-14vmax,0) scale(1.08)}}
+.grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:var(--grain-o);mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 1'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+
+/* glass */
+.glass{background:var(--glass);-webkit-backdrop-filter:blur(22px) saturate(165%);backdrop-filter:blur(22px) saturate(165%);
+  border:1px solid var(--line);box-shadow:inset 0 1px 0 var(--glass-hi),0 30px 60px -36px var(--shadow)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass{background:var(--glass-solid)}}
+.spot{position:relative;--mx:50%;--my:-20%}
+.spot::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;
+  background:radial-gradient(380px circle at var(--mx) var(--my),var(--hover-2),transparent 55%)}
+.spot:hover::after{opacity:1}
+
+/* shell */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding-top:14px}
+.topbar-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:6px;padding:7px 7px 7px 16px;border-radius:999px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:650 18px/1 var(--f-display);letter-spacing:-.02em;margin-right:auto;white-space:nowrap;padding:6px 0}
+.mark{display:inline-flex;gap:3px}
+.mark i{width:9px;height:9px;border-radius:50%;display:block}
+.mark i:nth-child(1){background:var(--bring)}.mark i:nth-child(2){background:var(--go)}.mark i:nth-child(3){background:var(--pay)}
+.nav{display:flex;gap:2px;margin-right:6px}
+.navlink{padding:9px 14px;border-radius:999px;text-decoration:none;color:var(--fg-2);font-weight:560;font-size:14.5px;transition:background .2s,color .2s;white-space:nowrap}
+.navlink:hover{color:var(--fg);background:var(--hover-2)}
+.navlink[aria-current="page"]{color:var(--fg);background:var(--glass-2);box-shadow:inset 0 0 0 1px var(--line)}
+.searchbtn{display:flex;align-items:center;gap:10px;height:42px;padding:0 8px 0 14px;border-radius:999px;border:1px solid var(--line);background:var(--hover);color:var(--fg-3);font-size:14px;cursor:pointer;transition:border-color .2s,color .2s}
+.searchbtn:hover{border-color:var(--line-2);color:var(--fg-2)}
+kbd{font:500 11.5px/1 var(--f-mono);padding:4px 7px;border-radius:7px;border:1px solid var(--line-2);color:var(--fg-3);background:var(--hover)}
+.iconbtn{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line);background:var(--hover);color:var(--fg-2);cursor:pointer;transition:color .2s,border-color .2s,transform .3s var(--ease)}
+.iconbtn:hover{color:var(--fg);border-color:var(--line-2)}
+.iconbtn:active{transform:scale(.94)}
+.tabbar{display:none}
+#view{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.enter{animation:enter .55s var(--ease) both}
+@keyframes enter{from{opacity:.4;transform:translateY(10px)}}
+
+/* type */
+.eyebrow{margin:0;font:500 11.5px/1.3 var(--f-mono);letter-spacing:.13em;text-transform:uppercase;color:var(--fg-3)}
+.h2{margin:0;font:650 clamp(26px,3.3vw,38px)/1.06 var(--f-display);letter-spacing:-.028em}
+.h3{margin:0 0 14px;font:640 21px/1.2 var(--f-display);letter-spacing:-.015em}
+.muted{color:var(--fg-2)}
+.fine{margin:0;font-size:12.5px;color:var(--fg-3)}
+
+/* buttons & chips */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--line-2);background:var(--hover);color:var(--fg);font:600 14.5px/1 var(--f-body);cursor:pointer;text-decoration:none;transition:transform .2s var(--ease),background .2s,border-color .2s;white-space:nowrap}
+.btn:hover{background:var(--hover-2)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--btn-bg);color:var(--btn-fg);border-color:transparent}
+.btn.primary:hover{background:var(--btn-bg);filter:brightness(1.08)}
+.btn.sm{min-height:36px;padding:0 14px;font-size:13.5px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--hover);color:var(--fg-2);font-size:13.5px;font-weight:560;text-decoration:none;cursor:pointer;transition:all .2s;white-space:nowrap}
+.chip:hover{color:var(--fg);border-color:var(--line-2)}
+.chip[aria-pressed="true"],.chip[aria-current="true"]{background:var(--btn-bg);color:var(--btn-fg);border-color:transparent}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--hover);font-size:13px;color:var(--fg-2)}
+.pill .ic{color:var(--fg-3)}
+.tag{font:500 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3);border:1px solid var(--line-2);padding:5px 8px;border-radius:999px;white-space:nowrap;align-self:start}
+.pk{display:flex;align-items:center;gap:10px;font:500 11.5px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--c)}
+.glow{width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 0 4px color-mix(in oklab,var(--c) 18%,transparent),0 0 16px var(--c);flex:none}
+
+/* home: hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:40px;align-items:center;padding-block:44px 8px}
+.hero-copy{min-width:0}
+.live{display:inline-flex;align-items:center;gap:10px;padding:7px 14px 7px 10px;border-radius:999px;border:1px solid var(--line);background:var(--hover);font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--fg-2)}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--go);box-shadow:0 0 0 0 var(--go);animation:pulse 2.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in oklab,var(--go) 60%,transparent)}70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.display{margin:22px 0 22px;font:680 clamp(46px,7.2vw,92px)/.95 var(--f-display);letter-spacing:-.045em}
+.display>span{display:block;animation:rise .9s var(--ease) both}
+.display>span:nth-child(2){animation-delay:.08s}.display>span:nth-child(3){animation-delay:.16s}
+@keyframes rise{from{opacity:.35;transform:translateY(14px)}}
+.display em{font-style:normal;color:var(--c)}
+.display .stop{color:var(--fg-3)}
+.lede{margin:0;font-size:18.5px;line-height:1.55;color:var(--fg-2);max-width:48ch}
+.bigsearch{display:flex;align-items:center;gap:14px;width:100%;max-width:540px;height:64px;margin-top:30px;padding:0 10px 0 20px;border-radius:20px;color:var(--fg-3);font-size:16.5px;cursor:pointer;text-align:left;transition:border-color .25s,transform .25s var(--ease)}
+.bigsearch:hover{border-color:var(--line-2);transform:translateY(-1px)}
+.bigsearch .lbl{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bigsearch .gokey{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:var(--btn-bg);color:var(--btn-fg)}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+.hero-art{position:relative;display:grid;justify-items:center;align-content:center;gap:16px;min-height:470px;min-width:0}
+.hero-art canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;-webkit-mask-image:radial-gradient(closest-side,#000 50%,transparent);mask-image:radial-gradient(closest-side,#000 50%,transparent)}
+.ticket{position:relative;width:min(100%,384px);padding:20px;border-radius:26px;transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.ticket.swap{opacity:0;transform:translateY(8px) scale(.985)}
+.t-head{display:flex;align-items:center;gap:12px;padding-bottom:16px}
+.t-head b{display:block;font:640 18px/1.2 var(--f-display);letter-spacing:-.01em}
+.t-head span.s{display:block;font-size:13px;color:var(--fg-3)}
+.t-head .tag{margin-left:auto;align-self:center}
+.ti{width:44px;height:44px;border-radius:15px;display:grid;place-items:center;background:var(--hover-2);border:1px solid var(--line);color:var(--fg);flex:none}
+.ti.big{width:60px;height:60px;border-radius:19px}
+.t-row{display:grid;grid-template-columns:54px minmax(0,1fr) auto;align-items:center;gap:12px;padding:13px 0;border-top:1px dashed var(--line-2)}
+.t-k{font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
+.t-v{font-weight:620;font-size:14.5px;min-width:0}
+.t-v small{display:block;font-weight:400;font-size:12.5px;color:var(--fg-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dots{display:flex;gap:4px}
+.dots i{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--bring)}
+.dots i.on{background:var(--bring)}
+.spark{display:block;color:var(--go)}
+.feat{display:flex;gap:6px;position:relative;z-index:1}
+.feat button{border:1px solid var(--line);background:var(--glass);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding:7px 13px;border-radius:999px;font-size:13px;font-weight:580;color:var(--fg-2);cursor:pointer}
+.feat button[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-fg);border-color:transparent}
+
+/* token board */
+.board{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;flex-wrap:wrap;padding:16px 20px;border-radius:18px;background:var(--board-bg);color:var(--board-fg);
+  box-shadow:inset 0 0 0 1px var(--board-line),inset 0 12px 30px rgba(0,0,0,.35);
+  background-image:radial-gradient(var(--board-line) 1px,transparent 1.4px);background-size:6px 6px}
+.board small{display:block;font:500 10.5px/1.2 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--board-dim);margin-bottom:6px}
+.doto{font:850 clamp(28px,3.4vw,36px)/1 var(--f-dot);letter-spacing:.03em;color:var(--board-fg);text-shadow:0 0 14px rgba(95,242,204,.55);white-space:nowrap;font-variant-numeric:tabular-nums}
+.board .bm{text-align:right}
+.board .bm b{display:block;font:600 15px/1.2 var(--f-mono);color:var(--board-fg)}
+.board .bm span{font-size:12.5px;color:var(--board-dim)}
+.ticket .board{margin-top:6px;padding:14px 16px;gap:10px 14px}
+.ticket .doto{font-size:26px}
+.board .bm{margin-left:auto}
+.board .bm span{display:block}
+
+/* home sections */
+.section{padding-block:60px 4px}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:12px 24px;flex-wrap:wrap;margin-bottom:24px}
+.sec-head p{color:var(--fg-2);max-width:52ch;margin:10px 0 0}
+.state{font:500 11.5px/1 var(--f-mono);letter-spacing:.04em;padding:6px 10px;border-radius:999px;background:color-mix(in oklab,var(--c) 14%,transparent);color:var(--c);white-space:nowrap}
+.field{display:grid;gap:8px;min-width:0}
+.field>label,.flabel{font:500 11.5px/1.2 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--fg-3)}
+.sel{appearance:none;-webkit-appearance:none;width:100%;min-width:0;max-width:100%;text-overflow:ellipsis;height:50px;border-radius:14px;border:1px solid var(--line-2);color:var(--fg);padding:0 42px 0 14px;font:560 15px var(--f-body);cursor:pointer;
+  background:var(--hover) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23889' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 14px center}
+.sel option,.sel optgroup{background:var(--glass-solid);color:var(--fg)}
+.qin{display:flex;align-items:center;gap:8px;height:58px;padding:0 16px;border-radius:16px;border:1px solid var(--line-2);background:var(--hover);transition:border-color .2s,box-shadow .2s}
+.qin:focus-within{border-color:var(--focus);box-shadow:0 0 0 4px color-mix(in oklab,var(--focus) 18%,transparent)}
+.qin>span:first-child{font:600 21px var(--f-mono);color:var(--fg-3)}
+.qin input{flex:1 1 0;width:0;min-width:0;border:0;background:transparent;color:var(--fg);font:600 22px var(--f-mono);outline:none;font-variant-numeric:tabular-nums}
+.qin input::placeholder{color:var(--fg-3);font:500 15px var(--f-body)}
+.qin .tag{align-self:center}
+
+/* ruler + verdict */
+.qout{display:grid;gap:14px;min-width:0}
+.ruler{position:relative;padding-top:38px}
+.rmk{position:absolute;inset:0 0 auto 0;height:100%}
+.rm{position:absolute;top:28px;bottom:-6px;width:3px;margin-left:-1.5px;border-radius:3px;background:var(--fg);box-shadow:0 0 0 3px var(--bg-2);transition:left .7s var(--ease)}
+.rm b{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);padding:5px 9px;border-radius:9px;background:var(--btn-bg);color:var(--btn-fg);font:600 12.5px/1 var(--f-mono);white-space:nowrap}
+.rm.l b{left:-2px;transform:none}.rm.r b{left:auto;right:-2px;transform:none}
+.rz{display:flex;gap:3px;height:14px}
+.rz i{display:block;height:100%;border-radius:4px;flex-basis:0;min-width:0}
+.rz .z0{background:repeating-linear-gradient(-45deg,var(--line-2) 0 3px,transparent 3px 7px)}
+.rz .z1{background:color-mix(in oklab,var(--good) 72%,transparent)}
+.rz .z2{background:color-mix(in oklab,var(--warn) 72%,transparent)}
+.rz .z3{background:color-mix(in oklab,var(--bad) 72%,transparent)}
+.rz i:first-child{border-radius:999px 4px 4px 999px}.rz i:last-child{border-radius:4px 999px 999px 4px}
+.rleg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--fg-2)}
+.rleg span{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.rleg b{font:600 13px var(--f-mono);color:var(--fg);font-variant-numeric:tabular-nums}
+.rleg i{width:10px;height:10px;border-radius:3px;display:block}
+.rleg .s0{background:repeating-linear-gradient(-45deg,var(--fg-3) 0 2px,transparent 2px 4px);border:1px solid var(--line-2)}
+.rleg .s1{background:var(--good)}.rleg .s2{background:var(--warn)}.rleg .s3{background:var(--bad)}
+.verdict{display:grid;gap:6px;padding:16px 18px;border-radius:18px;border:1px solid color-mix(in oklab,var(--vc) 34%,transparent);background:color-mix(in oklab,var(--vc) 9%,transparent);transition:background .3s,border-color .3s}
+.verdict.idle{--vc:var(--fg-3)}.verdict.good{--vc:var(--good)}.verdict.warn{--vc:var(--warn)}.verdict.bad{--vc:var(--bad)}.verdict.info{--vc:var(--info)}
+.vchip{display:inline-flex;align-items:center;gap:8px;font:600 11.5px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--vc)}
+.vchip i{width:7px;height:7px;border-radius:50%;background:var(--vc)}
+.vt{margin:2px 0 0;font:630 19px/1.3 var(--f-display);letter-spacing:-.01em}
+.vd{margin:0;color:var(--fg-2);font-size:14.5px}
+
+/* guide */
+.gh{padding-block:26px 0}
+.crumbs{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--fg-3)}
+.crumbs a{text-decoration:none;color:var(--fg-2)}
+.crumbs a:hover{color:var(--fg)}
+.gtitle{display:flex;gap:18px;align-items:center;margin:18px 0 0}
+.gtitle h1{margin:6px 0 0;font:670 clamp(34px,4.2vw,52px)/1 var(--f-display);letter-spacing:-.038em}
+.variants{display:flex;flex-wrap:wrap;gap:4px;padding:5px;border-radius:24px;width:max-content;max-width:100%;margin-top:22px}
+.vbtn{padding:10px 16px;border-radius:999px;text-decoration:none;color:var(--fg-2);font-weight:600;font-size:14.5px;transition:background .2s,color .2s;white-space:nowrap}
+.vbtn:hover{color:var(--fg);background:var(--hover-2)}
+.vbtn[aria-current="true"]{background:var(--btn-bg);color:var(--btn-fg)}
+.gsum{font-size:16.5px;line-height:1.55;color:var(--fg-2);max-width:66ch;margin:16px 0 0}
+.vmeta{display:flex;flex-wrap:wrap;gap:8px}
+.ph h2{margin:12px 0 0;font:650 27px/1.1 var(--f-display);letter-spacing:-.022em}
+.prog{display:grid;gap:8px;min-width:180px;font-size:13.5px;color:var(--fg-2)}
+.prog b{color:var(--fg);font-family:var(--f-mono)}
+.bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--bring);transition:width .6s var(--ease)}
+.cl{display:grid;gap:8px}
+.ci{position:relative;display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:4px 14px;align-items:start;padding:15px 16px;border-radius:18px;border:1px solid var(--line);background:var(--hover);transition:border-color .25s,background .25s}
+label.ci{cursor:pointer}
+.ci:hover{border-color:var(--line-2)}
+.ci.done{border-color:color-mix(in oklab,var(--bring) 40%,transparent);background:color-mix(in oklab,var(--bring) 7%,transparent)}
+.ci>input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.box{width:24px;height:24px;border-radius:8px;border:1.6px solid var(--line-2);display:grid;place-items:center;color:transparent;transition:all .3s var(--ease);margin-top:1px}
+.box .ic{transform:scale(.4);transition:transform .35s var(--ease)}
+.ci.done .box,.mini-row .box.on{background:var(--bring);border-color:var(--bring);color:var(--on-bring)}
+.ci.done .box .ic,.mini-row .box.on .ic{transform:scale(1)}
+.ci>input:focus-visible~.box{outline:2px solid var(--focus);outline-offset:2px}
+.ct{min-width:0}
+.ct b{display:block;font-weight:620;font-size:15.5px}
+.ct small{display:block;color:var(--fg-3);font-size:13.5px;margin-top:2px}
+.opts{grid-column:2/-1;display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.opt{position:relative;display:inline-flex}
+.opt input{position:absolute;opacity:0;width:1px;height:1px}
+.opt span{display:inline-block;padding:7px 13px;border-radius:999px;border:1px solid var(--line-2);font-size:13.5px;color:var(--fg-2);cursor:pointer;transition:all .2s}
+.opt span:hover{color:var(--fg);border-color:var(--fg-3)}
+.opt input:checked+span{background:color-mix(in oklab,var(--bring) 20%,transparent);border-color:var(--bring);color:var(--fg)}
+.opt input:focus-visible+span{outline:2px solid var(--focus);outline-offset:2px}
+.note{display:flex;gap:10px;align-items:flex-start;margin:0;color:var(--fg-2);font-size:14.5px}
+.note .ic{color:var(--fg-3);margin-top:2px}
+.online{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;padding:18px;border-radius:18px;background:color-mix(in oklab,var(--go) 9%,transparent);border:1px solid color-mix(in oklab,var(--go) 30%,transparent)}
+.online.soft{background:var(--hover);border-color:var(--line)}
+.online .ti{background:color-mix(in oklab,var(--go) 16%,transparent);border-color:transparent;color:var(--go)}
+.online.soft .ti{background:var(--hover-2);color:var(--fg-2)}
+.online h3{margin:2px 0 4px;font:630 17px/1.3 var(--f-display)}
+.online p{margin:0 0 12px;color:var(--fg-2);font-size:14.5px}
+.offices{display:flex;flex-wrap:wrap;gap:6px}
+.notice{display:inline-flex;gap:8px;align-items:center;margin-top:8px;padding:5px 10px;border-radius:10px;font-size:13px;color:var(--info);background:color-mix(in oklab,var(--info) 12%,transparent)}
+.now{display:inline-flex;align-items:center;gap:9px;padding:8px 13px;border-radius:999px;border:1px solid var(--line);background:var(--hover);font-size:13.5px;white-space:nowrap}
+.now i{width:8px;height:8px;border-radius:50%;background:var(--lc);flex:none}
+.now.open i{animation:npulse 2s infinite}
+@keyframes npulse{0%{box-shadow:0 0 0 0 color-mix(in oklab,var(--lc) 60%,transparent)}70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.now b{font-weight:620}
+.now span{color:var(--fg-3)}
+.heat-wrap{overflow-x:auto;padding:4px;margin:0 -4px}
+.heat{display:grid;grid-template-columns:40px repeat(var(--cols),minmax(30px,1fr));gap:5px;min-width:calc(40px + var(--cols) * 35px)}
+.hh{font:500 11px/1 var(--f-mono);color:var(--fg-3);text-align:center;padding-bottom:4px;align-self:end}
+.hd{font:500 12px/1 var(--f-mono);color:var(--fg-2);display:flex;align-items:center}
+.cell{position:relative;height:34px;border-radius:9px;border:0;padding:0;cursor:pointer;background:var(--l);transition:transform .25s var(--ease),box-shadow .2s}
+.cell:hover,.cell:focus-visible{transform:scale(1.1);z-index:2}
+.l0{--l:var(--h0)}.l1{--l:var(--h1)}.l2{--l:var(--h2)}.l3{--l:var(--h3)}.l4{--l:var(--h4)}
+.cell.last{background-image:repeating-linear-gradient(-45deg,transparent 0 4px,var(--line-2) 4px 6px)}
+.cell.best{box-shadow:0 0 0 2px var(--go),0 0 18px color-mix(in oklab,var(--go) 45%,transparent)}
+.cell.best::after{content:"";position:absolute;inset:0;margin:auto;width:6px;height:6px;border-radius:50%;background:var(--go)}
+.cell.now::before{content:"";position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:var(--fg);box-shadow:0 0 0 2px var(--bg-2)}
+.cell.sel{outline:2px solid var(--fg);outline-offset:2px}
+.hfoot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px 18px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:12.5px;color:var(--fg-3)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:4px;display:block;background:var(--l)}
+.legend .lb{box-shadow:0 0 0 2px var(--go);background:var(--h0)}
+.hdetail{min-height:22px;margin:0;font-size:14px;color:var(--fg-2)}
+.hdetail b{color:var(--fg)}
+.est{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--fg-3)}
+.alts{margin:0;font-size:14px;color:var(--fg-2)}
+.alts b{color:var(--fg);font-weight:600}
+.tipline{display:flex;gap:10px;align-items:flex-start;margin:0;font-size:14.5px;color:var(--fg-2)}
+.tipline .ic{color:var(--go);margin-top:2px}
+.noq{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px}
+.noq .ti{color:var(--go);background:color-mix(in oklab,var(--go) 14%,transparent);border-color:transparent}
+.noq h3{margin:2px 0 4px;font:630 18px/1.3 var(--f-display)}
+.noq p{margin:0;color:var(--fg-2);font-size:14.5px}
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;border-radius:16px;border:1px solid var(--line);background:var(--hover);justify-self:start}
+.seg button{border:0;background:transparent;padding:8px 13px;border-radius:12px;font-size:13.5px;font-weight:580;color:var(--fg-2);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-fg)}
+.flines{display:grid}
+.fl{display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line)}
+.fl:last-child{border-bottom:0}
+.fl b{font-weight:600;display:block}
+.fl small{display:block;color:var(--fg-3);font-size:13px}
+.fl.optl b{font-weight:500;color:var(--fg-2)}
+.amt{font:600 15px var(--f-mono);white-space:nowrap;font-variant-numeric:tabular-nums}
+.fl.optl .amt{color:var(--fg-2);font-weight:500}
+.ptable-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px}
+.ptable{width:100%;border-collapse:collapse;font-size:14px;min-width:420px}
+.ptable th,.ptable td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line)}
+.ptable tr:last-child td{border-bottom:0}
+.ptable th{font:500 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3)}
+.ptable td.n,.ptable th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ptable td.hit{color:var(--pay);font-weight:700}
+.pcap{padding:10px 14px;font-size:12.5px;color:var(--fg-3);border-top:1px solid var(--line);margin:0}
+.steps{counter-reset:s;list-style:none;margin:0;padding:0}
+.steps li{position:relative;display:grid;grid-template-columns:34px minmax(0,1fr);gap:14px;padding-bottom:18px}
+.steps li::before{counter-increment:s;content:counter(s);width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:600 13px/1 var(--f-mono);border:1px solid var(--line-2);background:var(--glass-2);color:var(--fg)}
+.steps li::after{content:"";position:absolute;left:16px;top:38px;bottom:4px;width:1px;background:var(--line-2)}
+.steps li:last-child{padding-bottom:0}.steps li:last-child::after{display:none}
+.steps b{display:block;font-weight:620;margin-top:5px}
+.steps span{color:var(--fg-2);font-size:14.5px}
+.watch{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+.watch li{display:grid;grid-template-columns:20px minmax(0,1fr);gap:12px;color:var(--fg-2);font-size:14.5px}
+.watch .ic{color:var(--warn);margin-top:2px}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.help{margin:0;font-size:14px;color:var(--fg-2)}
+.help b{font-family:var(--f-mono);color:var(--fg);user-select:all}
+.trip-top{display:flex;align-items:center;gap:16px}
+.trip-top h3{margin:6px 0 0;font:640 20px/1.2 var(--f-display)}
+.trip-top p.muted{margin:2px 0 0;font-size:14px}
+.ring{position:relative;width:86px;height:86px;flex:none}
+.ring svg{transform:rotate(-90deg);display:block}
+.ring .rt{fill:none;stroke:var(--line-2);stroke-width:7}
+.ring .rp{fill:none;stroke:var(--bring);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .8s var(--ease),stroke .3s}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font:650 21px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.trip.ready .ring .rp{stroke:var(--good);filter:drop-shadow(0 0 6px var(--good))}
+.trip dl{margin:0;display:grid}
+.tr{display:grid;grid-template-columns:50px minmax(0,1fr);gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.tr dt{font:500 11px/1.6 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
+.tr dd{margin:0;font-weight:620;font-size:15px;min-width:0}
+.tr dd small{display:block;font-weight:400;color:var(--fg-3);font-size:13px}
+.trip-actions{display:grid;gap:8px}
+.trip-actions .btn{width:100%}
+
+/* page heads + other pages */
+.phead{padding-block:40px 26px}
+.phead h1{font:670 clamp(38px,5.6vw,66px)/1 var(--f-display);letter-spacing:-.04em;margin:14px 0 14px}
+.phead p.lede{font-size:18px}
+.timing{display:grid;grid-template-columns:320px minmax(0,1fr);gap:24px;align-items:start}
+.olist{display:grid;gap:8px;align-content:start}
+.ofilter{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.ocard:hover{border-color:var(--line-2)}
+.ocard[aria-current="true"]{border-color:color-mix(in oklab,var(--go) 55%,transparent);background:color-mix(in oklab,var(--go) 8%,transparent)}
+.fees{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:24px;align-items:start}
+.fpanel{padding:26px;border-radius:var(--r-xl);display:grid;gap:20px;min-width:0}
+.fchips{display:flex;flex-wrap:wrap;gap:6px}
+.ftable{width:100%;border-collapse:collapse;font-size:14.5px;min-width:640px}
+.ftable th{text-align:left;font:500 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3);padding:14px 18px;border-bottom:1px solid var(--line-2)}
+.ftable td{padding:15px 18px;border-bottom:1px solid var(--line);vertical-align:top}
+.ftable tr:last-child td{border-bottom:0}
+.ftable td.n,.ftable th.n{text-align:right;font-family:var(--f-mono);white-space:nowrap;font-variant-numeric:tabular-nums}
+.ftable td small{display:block;color:var(--fg-3);font-size:12.5px}
+.ftable a{text-decoration:none;font-weight:600}
+.ftable a:hover{text-decoration:underline}
+.kitgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.kcard{padding:22px;border-radius:var(--r-lg);display:grid;gap:16px;align-content:start}
+.khead{display:flex;gap:14px;align-items:center}
+.khead b{display:block;font:640 18px/1.2 var(--f-display)}
+.khead small{display:block;color:var(--fg-3);font-size:13.5px}
+.krows{display:grid;gap:0}
+.krows .tr{grid-template-columns:50px minmax(0,1fr)}
+.kact{display:flex;gap:8px;flex-wrap:wrap}
+.empty{padding:40px;border-radius:var(--r-xl);display:grid;gap:14px;justify-items:start}
+.empty h2{margin:6px 0 0;font:650 28px/1.15 var(--f-display);letter-spacing:-.02em}
+.empty p{margin:0;color:var(--fg-2);max-width:52ch}
+.abt3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.abt3>div{padding:24px;border-radius:var(--r-lg)}
+.abt3 h3{margin:16px 0 8px;font:640 21px/1.2 var(--f-display)}
+.abt3 p{margin:0;color:var(--fg-2);font-size:15px}
+.sdg{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:32px;padding:32px;border-radius:var(--r-xl);align-items:center}
+.sdgnum{font:750 clamp(96px,14vw,168px)/.82 var(--f-display);letter-spacing:-.06em}
+.sdg h3{margin:14px 0 0;font:640 22px/1.2 var(--f-display)}
+.targets{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+.targets li{display:grid;grid-template-columns:62px minmax(0,1fr);gap:14px}
+.targets code{font:600 14px var(--f-mono);color:var(--go);padding-top:2px}
+.targets b{display:block;font-weight:620}
+.targets span{color:var(--fg-2);font-size:14.5px}
+.phases{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.phases li{padding:22px;border-radius:var(--r-lg);border:1px solid var(--line);background:var(--hover);display:grid;gap:8px;align-content:start}
+.phases li.cur{background:var(--glass);border-color:color-mix(in oklab,var(--go) 45%,transparent)}
+.phases b{font:640 19px/1.2 var(--f-display)}
+.phases p{margin:0;color:var(--fg-2);font-size:14.5px}
+.model{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line)}
+.model>div{padding:24px 24px 0 0}
+.model>div+div{padding-left:24px;border-left:1px solid var(--line)}
+.model h3{margin:0 0 8px;font:640 19px/1.2 var(--f-display)}
+.model p{margin:0;color:var(--fg-2);font-size:14.5px}
+.trust{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.trust>div{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;padding:22px;border-radius:var(--r-lg)}
+.trust h3{margin:2px 0 6px;font:630 17px/1.3 var(--f-display)}
+.trust p{margin:0;color:var(--fg-2);font-size:14.5px}
+
+/* footer */
+.foot{position:relative;z-index:1;max-width:1180px;margin:80px auto 0;padding-top:30px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;color:var(--fg-3);font-size:13.5px}
+.foot p{margin:10px 0 0;max-width:56ch}
+.foot .brand{margin:0}
+.flinks{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:10px}
+.flinks a{text-decoration:none;color:var(--fg-2)}
+.flinks a:hover{color:var(--fg)}
+
+/* palette, toast, modal */
+.pal{position:fixed;inset:0;z-index:80;display:grid;place-items:start center;padding:calc(env(safe-area-inset-top,0px) + 11vh) max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px));background:var(--scrim);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.pal-box{width:min(640px,100%);border-radius:24px;overflow:hidden;background:var(--glass-2);animation:pop .3s var(--ease) both}
+@keyframes pop{from{opacity:.4;transform:translateY(-8px) scale(.98)}}
+.pal-in{display:flex;align-items:center;gap:12px;padding:0 14px 0 18px;height:62px;border-bottom:1px solid var(--line);color:var(--fg-3)}
+.pal-in input{flex:1 1 0;width:0;min-width:0;background:transparent;border:0;outline:0;color:var(--fg);font:500 17px var(--f-body)}
+.pal-in input::placeholder{color:var(--fg-3)}
+.pal-list{max-height:min(440px,58vh);overflow:auto;padding:8px;margin:0;list-style:none}
+.pal-group{padding:10px 12px 6px;font:500 10.5px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3)}
+.pal-item{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:12px;align-items:center;padding:9px 10px;border-radius:14px;text-decoration:none;cursor:pointer}
+.pal-item .ti{width:38px;height:38px;border-radius:12px}
+.pal-item b{display:block;font-weight:600;font-size:15px}
+.pal-item small{display:block;color:var(--fg-3);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pal-item .ic.ar{color:var(--fg-3);opacity:0}
+.pal-item[aria-selected="true"]{background:var(--hover-2)}
+.pal-item[aria-selected="true"] .ic.ar{opacity:1}
+.pal-empty{padding:28px 16px;text-align:center;color:var(--fg-3)}
+.pal-foot{display:flex;gap:16px;flex-wrap:wrap;padding:10px 16px;border-top:1px solid var(--line);font-size:12px;color:var(--fg-3)}
+.pal-foot span{display:inline-flex;gap:6px;align-items:center}
+.toast{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom,0px));z-index:90;transform:translate(-50%,16px);opacity:0;padding:12px 18px;border-radius:999px;font-weight:600;font-size:14px;transition:opacity .35s var(--ease),transform .35s var(--ease);pointer-events:none;display:flex;gap:8px;align-items:center;white-space:nowrap}
+.toast .ic{color:var(--good)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.cbox{width:min(560px,100%);border-radius:24px;padding:22px;display:grid;gap:14px;background:var(--glass-2)}
+.cbox textarea{width:100%;min-height:240px;border-radius:14px;border:1px solid var(--line-2);background:var(--hover);color:var(--fg);font:500 13.5px/1.55 var(--f-mono);padding:14px;resize:vertical}
+.cbox .row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+
+
+/* ── v2: one thing at a time ── */
+.ph{display:flex;align-items:flex-end;justify-content:space-between;gap:14px 20px;flex-wrap:wrap}
+.ph h2{margin:12px 0 0;font:650 27px/1.1 var(--f-display);letter-spacing:-.022em}
+.gsec{display:grid;gap:20px;min-width:0}
+.gpanel{padding:30px;border-radius:var(--r-xl);min-width:0;display:grid;gap:28px;align-content:start}
+.guide2{display:grid;grid-template-columns:320px minmax(0,1fr);gap:24px;align-items:start;margin-top:24px}
+.guide2 .trip{position:sticky;top:calc(env(safe-area-inset-top,0px) + 96px)}
+.trip{padding:20px;border-radius:var(--r-xl);display:grid;gap:16px}
+.tnav{display:grid;gap:4px;margin:0 -6px}
+.trow{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:14px;align-items:center;padding:13px 12px;border-radius:16px;text-decoration:none;border:1px solid transparent;transition:background .2s,border-color .2s}
+.trow:hover{background:var(--hover)}
+.trow.on{background:var(--hover-2);border-color:var(--line)}
+.trow .glow{width:7px;height:7px}
+.trow:not(.on) .glow{box-shadow:none}
+.tl{min-width:0}
+.tl small{display:block;font:500 10.5px/1.2 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
+.tl b{display:block;font-weight:620;font-size:15px;margin-top:4px}
+.tl em{display:block;font-style:normal;color:var(--fg-3);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chev{color:var(--fg-3);transition:transform .25s var(--ease),color .2s}
+.trow:hover .chev,.trow.on .chev,.mrow:hover .chev,.ocard:hover .chev{transform:translateX(2px);color:var(--fg)}
+.nextbtn{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;padding:18px 20px;border-radius:18px;border:1px solid var(--line-2);background:var(--hover);text-decoration:none;color:var(--fg);cursor:pointer;text-align:left;font:inherit;transition:background .2s,transform .2s var(--ease)}
+.nextbtn:hover{background:var(--hover-2)}
+.nextbtn:active{transform:scale(.99)}
+.nextbtn small{display:block;font:500 10.5px/1.2 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3)}
+.nextbtn b{display:block;font:630 17px/1.3 var(--f-display);margin-top:5px}
+.morelist{display:grid;gap:8px}
+details.more{border:1px solid var(--line);border-radius:16px;background:var(--hover)}
+details.more>summary{list-style:none;display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;font-weight:600;border-radius:16px}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary>.ic:first-child{color:var(--fg-3)}
+details.more>summary .chev{margin-left:auto}
+details.more[open]>summary .chev{transform:rotate(90deg)}
+details.more>summary:hover{background:var(--hover)}
+.mbody{padding:2px 16px 18px;display:grid;gap:14px;min-width:0}
+.ftotal{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 20px;border-radius:18px;background:color-mix(in oklab,var(--pay) 9%,transparent);border:1px solid color-mix(in oklab,var(--pay) 28%,transparent)}
+.ftotal span{display:block;font-weight:600}
+.ftotal small{display:block;color:var(--fg-3);font-size:12.5px;margin-top:2px}
+.ftotal b{font:700 clamp(30px,4vw,42px)/1 var(--f-display);letter-spacing:-.03em;color:var(--pay);white-space:nowrap}
+.watchbox{display:grid;gap:0}
+.obar{display:flex}
+.obody{display:grid;gap:14px;min-width:0}
+.oaddr{display:grid;gap:8px;padding-top:14px;border-top:1px solid var(--line)}
+.oaddr p{margin:0;display:flex;gap:10px;align-items:flex-start;color:var(--fg-2);font-size:14px}
+.oaddr .ic{color:var(--fg-3);margin-top:2px}
+.oaddr b{color:var(--fg);font-weight:600}
+.notice{justify-self:start}
+.ramp{display:inline-flex;gap:3px}
+.ramp i{width:12px;height:12px;border-radius:4px;display:block;background:var(--l)}
+.lbest{margin-left:6px}
+.odetail{padding:28px;border-radius:var(--r-xl);min-width:0;display:grid;gap:16px;align-content:start}
+.odhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px 20px;flex-wrap:wrap}
+.odhead h2{margin:8px 0 2px;font:650 30px/1.1 var(--f-display);letter-spacing:-.025em}
+.odhead .muted{margin:0}
+.ocard{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px;border-radius:18px;text-decoration:none;border:1px solid var(--line);background:var(--hover);transition:border-color .2s,background .2s}
+.ocard:hover{border-color:var(--line-2)}
+.ocard[aria-current="true"]{border-color:color-mix(in oklab,var(--go) 55%,transparent);background:color-mix(in oklab,var(--go) 8%,transparent)}
+.oc{min-width:0}
+.oc b{display:block;font-weight:620}
+.oc small{display:block;color:var(--fg-3);font-size:13px}
+.nowl{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:12.5px;color:var(--fg-3)}
+.nowl i{width:7px;height:7px;border-radius:50%;background:var(--lc);flex:none}
+.orow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.ftable-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+.tasks5{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.tbtn{display:flex;flex-direction:column;gap:16px;padding:20px;border-radius:var(--r-lg);text-decoration:none;min-height:196px;transition:transform .35s var(--ease),border-color .3s}
+.tbtn:hover{transform:translateY(-3px);border-color:var(--line-2)}
+.tbtn b{display:block;font:640 20px/1.2 var(--f-display);letter-spacing:-.015em}
+.tbtn small{display:block;color:var(--fg-3);font-size:13.5px;margin-top:4px}
+.tfoot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;color:var(--fg-3)}
+.tfoot .ic{transition:transform .3s var(--ease),color .2s}
+.tbtn:hover .tfoot .ic{transform:translateX(3px);color:var(--fg)}
+.back{display:inline-flex;align-items:center;gap:6px;padding:9px 14px 9px 10px;margin:18px 0 6px;border-radius:999px;border:1px solid var(--line);background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);text-decoration:none;color:var(--fg-2);font-weight:600;font-size:14px;max-width:100%}
+.back span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.back:hover{color:var(--fg)}
+.mhero{padding-block:22px 4px}
+.mhero .display{font-size:clamp(42px,12.5vw,58px);margin:16px 0 12px}
+.mhero .lede{font-size:16.5px}
+.mhero .bigsearch{margin-top:20px;height:58px}
+.mhome{padding-top:30px;display:grid;gap:12px}
+.mhome>.eyebrow{margin:0}
+.mlist{display:grid;gap:8px}
+.mrow{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px;border-radius:20px;text-decoration:none}
+.mrow .ti{width:48px;height:48px}
+.mt{min-width:0}
+.mt b{display:block;font:630 17px/1.2 var(--f-display);letter-spacing:-.01em}
+.mt small{display:block;color:var(--fg-3);font-size:13.5px;margin-top:3px}
+.aboutlink{display:flex;align-items:center;gap:12px;margin-top:8px;padding:14px 16px;border-radius:18px;border:1px solid var(--line);color:var(--fg-2);text-decoration:none;font-weight:600}
+.aboutlink .chev{margin-left:auto}
+.mh{padding-block:20px 0;display:grid;gap:14px}
+.mh-title{display:flex;align-items:center;gap:14px}
+.mh-title h1{margin:5px 0 0;font:670 clamp(28px,8vw,34px)/1.05 var(--f-display);letter-spacing:-.03em}
+.msum{margin:0;color:var(--fg-2);font-size:15.5px}
+.vscroll{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
+.vscroll::-webkit-scrollbar{display:none}
+.vscroll .chip{flex:none}
+.hub{margin-top:18px}
+.hub .trow{padding:16px 12px}
+.hub .tl b{font-size:16px}
+.msec{display:grid;gap:24px;padding-top:6px}
+.fm{display:grid;gap:18px}
+
+@media (max-width:1040px){
+  .nav .navlink.about{display:none}
+}
+@media (max-width:960px){
+  .hero{grid-template-columns:minmax(0,1fr);padding-block:30px 10px;gap:24px}
+  .hero-art{min-height:0;padding-block:20px}
+  .sdg{grid-template-columns:minmax(0,1fr);gap:20px;padding:24px}
+  .guide2,.timing{grid-template-columns:280px minmax(0,1fr)}
+  .fees{grid-template-columns:minmax(0,1fr)}
+  .phases,.abt3{grid-template-columns:minmax(0,1fr)}
+  .gpanel,.odetail{padding:24px}
+}
+@media (max-width:820px){
+  .nav,.searchbtn .lbl,.searchbtn kbd{display:none}
+  .searchbtn{width:42px;padding:0;justify-content:center}
+  .topbar{padding-top:10px}
+  .tabbar{display:flex;position:fixed;z-index:50;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));padding:6px;border-radius:26px;gap:2px}
+  .tab{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:9px 2px 8px;border-radius:20px;text-decoration:none;color:var(--fg-3);font-size:11.5px;font-weight:620;white-space:nowrap}
+  .tab[aria-current="page"]{color:var(--fg);background:var(--glass-2);box-shadow:inset 0 0 0 1px var(--line)}
+  body{padding-block:0 118px}
+  .toast{bottom:calc(100px + env(safe-area-inset-bottom,0px))}
+  .phead{padding-block:24px 18px}
+  .phead h1{font-size:clamp(32px,9vw,40px);margin:12px 0 0}
+  .phead .lede{margin-top:12px}
+  .timing{grid-template-columns:minmax(0,1fr)}
+  .odetail{padding:0;border-radius:0}
+  .odhead h2{font-size:28px}
+  .gsec{gap:18px}
+  .ph h2{font-size:26px}
+  .model{grid-template-columns:minmax(0,1fr)}
+  .model>div,.model>div+div{padding:22px 0 6px;border-left:0}
+  .model>div+div{border-top:1px solid var(--line)}
+  .trust{grid-template-columns:minmax(0,1fr)}
+  .foot{grid-template-columns:minmax(0,1fr);margin-top:44px;gap:6px;padding-top:22px}
+  .foot .flinks,.foot .eyebrow{display:none}
+  .empty{padding:26px}
+}
+@media (max-width:560px){
+  .live{font-size:10.5px;letter-spacing:.04em;padding-right:12px}
+  .ci{padding:14px;grid-template-columns:24px minmax(0,1fr)}
+  .ci .tag{display:none}
+  .board{padding:14px 16px}
+  .ftotal{padding:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .aurora i{animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#view" data-skip>Skip to content</a>
+<div class="aurora" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="topbar-in glass">
+    <a class="brand" href="#home" aria-label="Bring Go Pay, home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>Bring Go Pay</a>
+    <nav class="nav" aria-label="Main">
+      <a class="navlink" data-nav="home" href="#home">Guides</a>
+      <a class="navlink" data-nav="timing" href="#timing">Best time</a>
+      <a class="navlink" data-nav="fees" href="#fees">Fair price</a>
+      <a class="navlink" data-nav="kit" href="#kit">My kit</a>
+      <a class="navlink about" data-nav="about" href="#about">About</a>
+    </nav>
+    <button class="searchbtn" type="button" data-open-palette aria-label="Search guides"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.2 4.2"/></svg><span class="lbl">Search</span><kbd data-kbd>Ctrl K</kbd></button>
+    <button class="iconbtn" type="button" data-theme-toggle aria-label="Switch theme"></button>
+  </div>
+</header>
+
+<main id="view" tabindex="-1"></main>
+
+<footer class="foot">
+  <div>
+    <a class="brand" href="#home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>Bring Go Pay</a>
+    <p>An independent civic-tech pilot, not a government website. Fees checked 16 Oct 2026. Rush levels are estimates. Confirm on the official portal before you pay.</p>
+  </div>
+  <div>
+    <p class="eyebrow">Official sources</p>
+    <div class="flinks">
+      <a href="https://uidai.gov.in" target="_blank" rel="noopener">UIDAI</a>
+      <a href="https://www.passportindia.gov.in" target="_blank" rel="noopener">Passport Seva</a>
+      <a href="https://www.incometax.gov.in" target="_blank" rel="noopener">Income Tax e-filing</a>
+      <a href="https://www.protean-tinpan.com" target="_blank" rel="noopener">Protean PAN</a>
+      <a href="https://www.shcilestamp.com" target="_blank" rel="noopener">SHCIL e-stamp</a>
+    </div>
+  </div>
+</footer>
+
+<nav class="tabbar glass" aria-label="Main">
+  <a class="tab" data-nav="home" href="#home"><svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg>Guides</a>
+  <a class="tab" data-nav="timing" href="#timing"><svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>Best time</a>
+  <a class="tab" data-nav="fees" href="#fees"><svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5h10M7 9h10M10 5c3 0 4.6 1.5 4.6 3.9S13 13 10 13H7.2l7 6"/></svg>Fair price</a>
+  <a class="tab" data-nav="kit" href="#kit"><svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v16l-5-3.6L7 20z"/></svg>My kit</a>
+</nav>
+
+<div class="pal" id="pal" hidden>
+  <div class="pal-box glass" role="dialog" aria-modal="true" aria-label="Search guides">
+    <div class="pal-in">
+      <svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.2 4.2"/></svg>
+      <input id="pal-q" type="text" placeholder="Change Aadhaar address, renew passport…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="pal-list" aria-autocomplete="list">
+      <kbd>Esc</kbd>
+    </div>
+    <ul class="pal-list" id="pal-list" role="listbox"></ul>
+    <div class="pal-foot"><span><kbd>↑</kbd><kbd>↓</kbd> move</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+
+<div class="pal" id="copym" hidden>
+  <div class="cbox glass" role="dialog" aria-modal="true" aria-labelledby="copym-t">
+    <div class="row"><h2 class="h3" id="copym-t" style="margin:0">Copy your checklist</h2><button class="iconbtn" type="button" data-close-copy aria-label="Close"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <p class="fine">Your browser blocked automatic copying. The text is selected, so press Ctrl+C (or ⌘C) and paste it into WhatsApp or your notes.</p>
+    <textarea id="copym-text" readonly></textarea>
+  </div>
+</div>
+
+<div class="toast glass" id="toast" role="status" aria-live="polite"></div>
+<noscript><p style="position:relative;z-index:2;max-width:1180px;margin:40px auto">Bring Go Pay needs JavaScript to show its guides.</p></noscript>
+
+<script>
+(() => {
+'use strict';
+
+/* ───────────────────────── basics ───────────────────────── */
+const CHECKED = '16 Oct 2026';
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const DAYS_LONG = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const LEVELS = ['Quiet','Light','Moderate','Busy','Packed'];
+const LEVEL_VAR = ['--good','--good','--warn','--bad','--bad'];
+const RM = matchMedia('(prefers-reduced-motion: reduce)');
+const root = document.documentElement;
+const view = document.getElementById('view');
+
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem('bgp:' + k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem('bgp:' + k, JSON.stringify(v)); }catch(e){} }
+};
+const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
+const plural = (n, w) => n + ' ' + w + (n === 1 ? '' : 's');
+const idOf = s => s.replace(/[^a-z0-9]/gi, '-');
+
+const IC = {
+  fingerprint:'<path d="M12 11.5v2.2c0 2.2-.5 4.3-1.4 6.3"/><path d="M8.6 12.2a3.4 3.4 0 0 1 6.8-.4v1.9c0 1.8-.3 3.6-.8 5.3"/><path d="M5.6 13.6a6.4 6.4 0 0 1-.1-1.5 6.5 6.5 0 0 1 12.9-1.2"/><path d="M18.6 14.4c0 1.4-.2 2.8-.5 4.1"/><path d="M7.3 18.6c.5-1.1.8-2.3.9-3.5"/><path d="M6.4 6.9A8.4 8.4 0 0 1 19.7 9"/>',
+  card:'<rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="11" r="2"/><path d="M5.8 16c.6-1.3 1.6-2 2.7-2s2.1.7 2.7 2"/><path d="M14 10h4M14 13h4M14 16h2.5"/>',
+  passport:'<rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="12" cy="10.5" r="3.3"/><path d="M8.7 10.5h6.6M12 7.2c.9 1 1.4 2.1 1.4 3.3s-.5 2.3-1.4 3.3c-.9-1-1.4-2.1-1.4-3.3s.5-2.3 1.4-3.3"/><path d="M9 17.2h6"/>',
+  home:'<path d="M3.8 11 12 4.5l8.2 6.5"/><path d="M6 9.4V20h12V9.4"/><circle cx="12" cy="13.6" r="1.8"/><path d="M12 15.4V18M12 16.9h1.5"/>',
+  receipt:'<path d="M6 3h12v18l-2-1.3-2 1.3-2-1.3-2 1.3-2-1.3L6 21z"/><path d="M9.5 7.5h5M9.5 10h5M11 7.5c1.6 0 2.6.9 2.6 2.1S12.6 12 11 12H9.5l3.8 4"/>',
+  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  bring:'<rect x="5.5" y="4.5" width="13" height="16" rx="2.2"/><path d="M9.3 4.5v-.8c0-.6.5-1.2 1.1-1.2h3.2c.6 0 1.1.6 1.1 1.2v.8"/><path d="m9.2 12.6 2 2 3.7-3.9"/>',
+  rupee:'<path d="M7 5h10M7 9h10M10 5c3 0 4.6 1.5 4.6 3.9S13 13 10 13H7.2l7 6"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.2 4.2"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.8v2M12 19.2v2M2.8 12h2M19.2 12h2M5.5 5.5l1.4 1.4M17.1 17.1l1.4 1.4M5.5 18.5l1.4-1.4M17.1 6.9l1.4-1.4"/>',
+  moon:'<path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1z"/>',
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  arrowUR:'<path d="M7 17 17 7M9 7h8v8"/>',
+  check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  ext:'<path d="M14 5h5v5M19 5l-8 8"/><path d="M18 13.5V18a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h4.5"/>',
+  pin:'<path d="M12 21s-6.5-5.8-6.5-11a6.5 6.5 0 0 1 13 0c0 5.2-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
+  bookmark:'<path d="M7 4h10v16l-5-3.6L7 20z"/>',
+  bookmarked:'<path d="M7 4h10v16l-5-3.6L7 20z" fill="currentColor"/>',
+  copy:'<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M5 15V6a1 1 0 0 1 1-1h9"/>',
+  x:'<path d="M6 6l12 12M18 6 6 18"/>',
+  info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8h.01"/>',
+  alert:'<path d="M12 4 21 19.5H3z"/><path d="M12 10v4.2M12 17h.01"/>',
+  monitor:'<rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M9 20h6M12 16.5V20"/>',
+  grid:'<rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/>',
+  shield:'<path d="M12 3.5 19 6v5.5c0 4.3-3 7.6-7 9-4-1.4-7-4.7-7-9V6z"/><path d="m9 12 2.2 2.2L15.5 10"/>',
+  queue:'<circle cx="6" cy="7" r="2"/><circle cx="12" cy="7" r="2"/><circle cx="18" cy="7" r="2"/><path d="M3.5 17c0-2 1.2-3.5 2.5-3.5S8.5 15 8.5 17M9.5 17c0-2 1.2-3.5 2.5-3.5s2.5 1.5 2.5 3.5M15.5 17c0-2 1.2-3.5 2.5-3.5s2.5 1.5 2.5 3.5"/>',
+  layers:'<path d="m12 4 8.5 4.5L12 13 3.5 8.5z"/><path d="m3.5 12.5 8.5 4.5 8.5-4.5M3.5 16.5 12 21l8.5-4.5"/>'
+};
+const icon = (n, s = 20, sw = 1.7) => `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || ''}</svg>`;
+
+/* ───────────────────────── data ───────────────────────── */
+const AAD = { id:'aad', s:'Aadhaar', t:'Your Aadhaar number', d:'The card, an e-Aadhaar PDF or just the 12-digit number.', tag:'Original' };
+const PH  = { id:'ph', s:'linked phone', t:'The phone linked to your Aadhaar', d:'For the OTP. If that number is wrong, fix it first at a centre.', tag:'Phone' };
+const MYA = 'https://myaadhaar.uidai.gov.in';
+const PSP = 'https://www.passportindia.gov.in';
+const ARN = { id:'arn', s:'appointment slip', t:'Appointment receipt (ARN)', d:'Printout or the SMS. You book this online after paying.', tag:'Phone' };
+const COPIES = { id:'copies', s:'copies', t:'One self-attested photocopy of each document', d:'Sign each copy. Carry the originals too.', tag:'Copy' };
+const PSP_WATCH = 'Book only on passportindia.gov.in or the mPassport Seva app. Look-alike sites charge extra for nothing.';
+
+const TASKS = [
+{
+  id:'aadhaar', name:'Aadhaar', title:'Update your Aadhaar', icon:'fingerprint', authority:'UIDAI',
+  blurb:'Change your address, name, birth date, mobile number or photo.',
+  meta:['4 kinds of update','Online or at a centre','From ₹75'], short:'Address, name, phone or photo', chan:'either', chanTxt:'Online or centre',
+  offices:['ask-southend','ask-majestic'],
+  links:[{l:'myAadhaar', u:MYA},{l:'UIDAI', u:'https://uidai.gov.in'}],
+  help:['Aadhaar helpline','1947'],
+  variants:[
+    { id:'address', label:'Address', kw:'aadhar address change shift moved move house new address update proof',
+      summary:'Moved house? Update your address online with a scan of your proof, or at an Aadhaar centre.',
+      mode:'either', time:'10 min online, 30–45 min at a centre', result:'Usually updated in a few days to a few weeks',
+      online:{ t:'Skip the trip. Do it on myAadhaar.', d:'Log in with your Aadhaar number and an OTP, upload your proof of address and pay ₹75. Same fee as a centre, no queue.', u:MYA, ul:'Open myAadhaar' },
+      bring:[ AAD,
+        { id:'poa', s:'address proof', t:'Proof of your new address', d:'Pick the one you have. The name on it must match your Aadhaar exactly.', tag:'Original', pick:['Passport','Voter ID','Bank passbook or statement','Electricity, water or gas bill (last 3 months)','Registered rent agreement','Ration card'] },
+        PH ],
+      steps:[
+        ['Log in to myAadhaar','Use your Aadhaar number and the OTP sent to your linked phone.'],
+        ['Choose Address Update','Type the new address exactly as it appears on your proof, house number included.'],
+        ['Upload your proof','A clear scan or phone photo works. PDF, JPG or PNG.'],
+        ['Pay ₹75','Pay online and note the 14-digit URN (Update Request Number).'],
+        ['Track and download','Check status with the URN. Download your new e-Aadhaar once it’s approved.'] ],
+      watch:[
+        'Nobody can fast-track an Aadhaar update for extra money. Anyone offering is overcharging you.',
+        'Proof is in a parent’s or spouse’s name? Use the Head of Family option on myAadhaar.',
+        'Refreshing your old documents without changing any details is free online until 14 June 2027.' ],
+      pay:{ lines:[ {l:'Address update, online or at a centre', a:75}, {l:'Colour printout at a centre', a:40, opt:true}, {l:'e-Aadhaar download', a:0, opt:true} ],
+        official:75, fairHi:150, over:250, base:'official fee',
+        say:'The official fee is ₹75 for an address update, online or at any Aadhaar centre. Pay it yourself on myAadhaar.' } },
+    { id:'name', label:'Name or birth date', kw:'aadhar name spelling correction dob date of birth wrong change surname marriage',
+      summary:'Fix a spelling mistake or a wrong date of birth. Online works if your phone is linked. Otherwise, one centre visit.',
+      mode:'either', time:'30–45 min at a centre', result:'Usually updated in a few days to a few weeks',
+      online:{ t:'Online works too', d:'myAadhaar takes name and date-of-birth corrections with an OTP and a scanned proof. Same ₹75 fee.', u:MYA, ul:'Open myAadhaar' },
+      bring:[ AAD,
+        { id:'poi', t:'Proof of identity with the correct name', d:'Pick one. Needed for a name change.', tag:'Original', pick:['Passport','PAN card','Voter ID','Driving licence','Marriage certificate or gazette notification'] },
+        { id:'dob', t:'Proof of date of birth', d:'Only if you’re changing your birth date.', tag:'Original', opt:true, pick:['Birth certificate','Passport','SSLC / Class 10 marks card'] },
+        PH ],
+      steps:[
+        ['Settle the exact spelling','Check it letter by letter against the proof you’ll use.'],
+        ['Go online or book a slot','Use myAadhaar, or book an appointment at an Aadhaar Seva Kendra.'],
+        ['Check the screen before you confirm','At a centre the operator types your details. Read them on the screen, then confirm with your fingerprint.'],
+        ['Pay ₹75 and keep the slip','The acknowledgement slip has your URN.'],
+        ['Track the update','Check status online with the URN.'] ],
+      watch:[
+        'You can change your name only twice in a lifetime, and your date of birth only once. Get it right the first time.',
+        'A small spelling fix still counts as one of those changes.',
+        'Changing your surname after marriage? Carry the original marriage certificate.' ],
+      pay:{ lines:[ {l:'Name or birth date update', a:75}, {l:'Colour printout at a centre', a:40, opt:true} ],
+        official:75, fairHi:150, over:250, base:'official fee',
+        say:'The official fee is ₹75 for a name or date-of-birth change. Authorised centres can’t charge more.' } },
+    { id:'mobile', label:'Mobile number', kw:'aadhar mobile phone number change link otp update new sim',
+      summary:'New phone number? This usually needs one centre visit, because the change is confirmed with your fingerprint.',
+      mode:'office', time:'20–30 min at a centre', result:'New number usually works within a few days',
+      online:{ t:'Check the Aadhaar app first', d:'The new Aadhaar app has started offering mobile updates with face authentication. If the option shows for you, you can skip the trip. If it doesn’t, go to a centre.', u:'https://uidai.gov.in', ul:'Visit UIDAI', soft:true },
+      bring:[ AAD, { id:'newph', t:'Your new mobile phone, switched on', d:'You may get an OTP on it during the update.', tag:'Phone' } ],
+      note:'No address or identity proof is needed for a mobile number update.',
+      steps:[
+        ['Book a slot or walk in','Appointments are on the UIDAI site. Walk-ins are taken when there’s room.'],
+        ['Take a token','Ask for a mobile number update.'],
+        ['Confirm with your fingerprint','The operator enters the new number. You confirm with a fingerprint or iris scan.'],
+        ['Pay ₹75','Keep the acknowledgement slip with your URN.'],
+        ['Test it','After a few days, log in to myAadhaar. The OTP should arrive on the new number.'] ],
+      watch:[
+        'Never share an Aadhaar OTP with anyone who calls you, even if they say they’re from UIDAI or your bank.',
+        'Your bank and phone company need the new number separately. Aadhaar doesn’t tell them.',
+        'Updating your photo or fingerprints in the same visit? You pay ₹125 in total, not both fees.' ],
+      pay:{ lines:[ {l:'Mobile number update', a:75} ], official:75, fairHi:100, over:200, base:'official fee',
+        say:'The official fee is ₹75. At an authorised Aadhaar centre nobody should charge more.' } },
+    { id:'bio', label:'Photo or fingerprints', kw:'aadhar biometric photo picture fingerprint iris update mbu face',
+      summary:'New photo, fingerprints or iris scan. Always at a centre, because they’re captured live.',
+      mode:'office', time:'20–30 min at a centre', result:'Usually updated in a few days to a few weeks',
+      bring:[ AAD, PH ],
+      note:'No documents needed. You just need to be there in person.',
+      steps:[
+        ['Book a slot or walk in','Appointments are on the UIDAI site. Walk-ins are taken when there’s room.'],
+        ['Ask for a biometric update','Say which: photo, fingerprints, iris, or all three. One fee covers all of them.'],
+        ['Get captured','Take off your glasses for the photo and the iris scan.'],
+        ['Pay ₹125','Keep the acknowledgement slip with your URN.'],
+        ['Download the new e-Aadhaar','Your new photo shows up once the update is approved.'] ],
+      watch:[
+        'Add an address or name change to the same visit. You still pay only ₹125.',
+        'There’s no paid option for a better photo. Anyone selling one is overcharging you.' ],
+      pay:{ lines:[ {l:'Biometric update, with or without other changes', a:125}, {l:'Colour printout at a centre', a:40, opt:true} ],
+        official:125, fairHi:150, over:250, base:'official fee',
+        say:'The official fee is ₹125 for any biometric update, even if you change other details in the same visit.' } }
+  ]
+},
+{
+  id:'pan', name:'PAN', title:'Get or correct your PAN', icon:'card', authority:'Income Tax Department',
+  blurb:'Get a free e-PAN in minutes, order a card by post, or fix a mistake.',
+  meta:['3 ways','Fully online','From free'], short:'Free e-PAN, card or correction', chan:'online', chanTxt:'Online',
+  offices:[],
+  links:[{l:'Income Tax e-filing', u:'https://www.incometax.gov.in'},{l:'Protean PAN', u:'https://www.protean-tinpan.com'},{l:'UTIITSL PAN', u:'https://www.pan.utiitsl.com'}],
+  go:{ t:'No office visit needed', d:'Everything happens online with an Aadhaar OTP. Paper forms at PAN centres still exist, but they’re slower.', best:'Any time. Portals slow down in the last week before tax deadlines.', board:['Best time','ANY TIME','Queue','None'] },
+  variants:[
+    { id:'instant', label:'Free e-PAN', kw:'pan e-pan epan instant free new pan aadhaar first',
+      summary:'No PAN yet, and your Aadhaar is linked to your phone? Get an e-PAN in about ten minutes, free.',
+      mode:'online', time:'About 10 minutes', result:'e-PAN PDF usually ready the same day',
+      bring:[ AAD, PH, { id:'mail', t:'An email address', d:'Optional. The e-PAN can be sent there too.', tag:'Online', opt:true } ],
+      steps:[
+        ['Open the Income Tax site','Go to incometax.gov.in and choose Instant e-PAN.'],
+        ['Enter your Aadhaar','Confirm with the OTP sent to your linked phone.'],
+        ['Check your details','Your name, birth date and photo come from Aadhaar.'],
+        ['Download the e-PAN','It’s a signed PDF and works everywhere a printed card does.'] ],
+      watch:[
+        'Agents often charge for this. It’s free and takes about ten minutes on your own.',
+        'Your e-PAN copies your Aadhaar details, so fix any Aadhaar mistakes first.',
+        'Already have a PAN? Don’t apply again. Holding two PANs can bring a ₹10,000 penalty.' ],
+      pay:{ lines:[ {l:'Instant e-PAN', a:0} ], official:0, fairHi:100, over:200, base:'official fee',
+        say:'Instant e-PAN is free on incometax.gov.in. All you need is your Aadhaar and the phone linked to it.' } },
+    { id:'card', label:'PAN card by post', kw:'pan card new apply physical posted form 49a form 93 nsdl protean utiitsl plastic',
+      summary:'Want a physical card at home? Apply on Protean or UTIITSL. Both are official and charge the same.',
+      mode:'online', time:'About 20 minutes', result:'Card usually arrives by post in about two weeks',
+      bring:[ AAD, PH, { id:'payk', t:'A way to pay', d:'UPI, net banking or a card. Cards can add up to 2% bank charge.', tag:'Online' } ],
+      note:'With Aadhaar e-KYC, your Aadhaar covers identity, address and birth-date proof. Nothing to post.',
+      steps:[
+        ['Pick Protean or UTIITSL','Both are authorised by the Income Tax Department. Same fee, same card.'],
+        ['Choose New PAN for Indian citizens','Fill in the form. The portal uses the current form automatically.'],
+        ['Verify with an Aadhaar OTP','e-KYC and e-sign replace paper documents.'],
+        ['Pay','₹107 for the card plus e-PAN, or ₹72 for e-PAN only.'],
+        ['Track it','Use the 15-digit acknowledgement number.'] ],
+      watch:[
+        'Only use the official Protean or UTIITSL sites. Look-alike sites charge more for the same card.',
+        'Holding two PANs is illegal and can bring a ₹10,000 penalty.' ],
+      pay:{ lines:[ {l:'PAN card + e-PAN, delivered in India', a:107}, {l:'e-PAN only, no card', a:72, opt:true} ],
+        official:107, fairHi:250, over:400, base:'official fee',
+        say:'The official fee is ₹107 for a PAN card delivered in India, or ₹72 for e-PAN only.' } },
+    { id:'fix', label:'Correction', kw:'pan correction change name dob date of birth photo signature reprint update mismatch',
+      summary:'Wrong spelling, old photo or a new surname? Correct it online. Your PAN number stays the same.',
+      mode:'online', time:'About 20 minutes', result:'Corrected card usually arrives in a few weeks',
+      bring:[ { id:'pann', t:'Your existing PAN number', d:'The card or the e-PAN PDF.', tag:'Original' }, AAD, PH,
+        { id:'proof', t:'Proof of the correct detail', d:'Pick the one that matches your change.', tag:'Scan', pick:['Aadhaar with the correct details','Passport','Marriage certificate or gazette (name)','Birth certificate or SSLC (birth date)'] } ],
+      steps:[
+        ['Find who issued your card','The back of the card says Protean (NSDL) or UTIITSL. Use that site.'],
+        ['Choose Changes or Correction in PAN data','Tick only the fields you’re changing.'],
+        ['Upload your proof','A clear scan of the document that shows the correct detail.'],
+        ['Verify and pay','Aadhaar OTP, then ₹107 with a new card or ₹72 for e-PAN only.'],
+        ['Track it','The corrected card comes by post. Your PAN number never changes.'] ],
+      watch:[
+        'Make your PAN and Aadhaar details match. A mismatch can block linking, refunds and KYC.',
+        'Don’t apply for a new PAN to fix a mistake. That gives you two PANs, which is illegal.' ],
+      pay:{ lines:[ {l:'Correction with a new card', a:107}, {l:'Correction, e-PAN only', a:72, opt:true} ],
+        official:107, fairHi:250, over:400, base:'official fee',
+        say:'A PAN correction costs ₹107 with a new card, or ₹72 for e-PAN only.' } }
+  ]
+},
+{
+  id:'passport', name:'Passport', title:'Apply for a passport', icon:'passport', authority:'Ministry of External Affairs',
+  blurb:'First passport, renewal or Tatkal. One appointment, then police verification.',
+  meta:['3 ways','One PSK visit','From ₹2,500'], short:'First, renewal or Tatkal', chan:'visit', chanTxt:'1 visit',
+  offices:['psk-lalbagh','psk-whitefield'],
+  links:[{l:'Passport Seva', u:PSP}],
+  help:['Passport helpline','1800-258-1800'],
+  feeTable:true,
+  variants:[
+    { id:'fresh', label:'First passport', kw:'passport new fresh first apply adult',
+      summary:'Your first passport as an adult. One appointment at a Passport Seva Kendra, then police verification at home.',
+      mode:'office', time:'2–3 hours at the PSK', result:'Arrives by Speed Post a few weeks after police verification',
+      bring:[ ARN,
+        { id:'addr', s:'address proof', t:'Proof of present address', d:'Pick one.', tag:'Original', pick:['Aadhaar','Bank passbook with photo','Electricity, water or gas bill','Registered rent agreement','Voter ID'] },
+        { id:'dob', s:'birth proof', t:'Proof of date of birth', d:'Pick one.', tag:'Original', pick:['Birth certificate','SSLC / Class 10 certificate','PAN card','Aadhaar','Driving licence'] },
+        COPIES ],
+      note:'No photos needed. They take your photo at the counter.',
+      steps:[
+        ['Register and fill the form','On passportindia.gov.in or the mPassport Seva app.'],
+        ['Pay and book a slot','Pick PSK Lalbagh or PSK Whitefield. Earlier slots move faster.'],
+        ['Arrive 15 minutes early','With originals and self-attested copies.'],
+        ['Go through counters A, B and C','A: documents, photo and fingerprints. B: verification. C: approval.'],
+        ['Police verification','An officer visits or calls you at your address.'],
+        ['Passport by Speed Post','Track it on the portal with your file number.'] ],
+      watch:[ PSP_WATCH,
+        'Your name, birth date and address must match across every document you bring.',
+        'The Regional Passport Office in Koramangala doesn’t take new applications. Go to your PSK.' ],
+      pay:{ lines:[ {l:'Fresh passport, 36 pages, normal', a:2500}, {l:'60-page booklet instead', a:3500, opt:true} ],
+        official:2500, fairHi:3200, over:4000, base:'official fee',
+        say:'The official fee for a normal 36-page passport is ₹2,500. Pay it yourself on passportindia.gov.in.' } },
+    { id:'renew', label:'Renewal', kw:'passport renew renewal reissue expired expiring pages full',
+      summary:'Expired, expiring, or out of pages? Same process. Your old passport is the key document.',
+      mode:'office', time:'1–2 hours at the PSK', result:'Often faster than a first passport',
+      bring:[ ARN,
+        { id:'old', t:'Your old passport', d:'The original booklet.', tag:'Original' },
+        { id:'oldcopy', t:'Self-attested copy of the first two and last two pages', d:'Include the observation page if there is one.', tag:'Copy' },
+        { id:'addr2', t:'Proof of new address', d:'Only if your address has changed.', tag:'Original', opt:true, pick:['Aadhaar','Bank passbook with photo','Utility bill','Registered rent agreement'] } ],
+      note:'Changed your name after marriage? Bring the marriage certificate too.',
+      steps:[
+        ['Fill the re-issue form','Choose Re-issue of Passport on the portal.'],
+        ['Pay and book a slot','Pick PSK Lalbagh or PSK Whitefield.'],
+        ['Visit with your old passport','They check it against your new application and cancel the old booklet.'],
+        ['Verification','Police verification depends on your case. The portal tells you.'],
+        ['Passport by Speed Post','Track it on the portal with your file number.'] ],
+      watch:[ PSP_WATCH,
+        'Renew well before you travel. Many countries want at least six months of validity left.',
+        'Keep the cancelled passport safe. It may hold visas you still need.' ],
+      pay:{ lines:[ {l:'Renewal, 36 pages, normal', a:2500}, {l:'60-page booklet instead', a:3500, opt:true} ],
+        official:2500, fairHi:3200, over:4000, base:'official fee',
+        say:'The official renewal fee for a normal 36-page passport is ₹2,500, paid on passportindia.gov.in.' } },
+    { id:'tatkal', label:'Tatkal (urgent)', kw:'tatkal tatkaal urgent fast quick passport emergency',
+      summary:'Need it fast? Same appointment, faster dispatch. Police verification can come after the passport is issued.',
+      mode:'office', time:'2–3 hours at the PSK', result:'Dispatched much faster than normal',
+      bring:[ ARN,
+        { id:'aadT', t:'Aadhaar', d:'Required for Tatkal.', tag:'Original' },
+        { id:'idT', t:'One more photo ID', d:'Pick one.', tag:'Original', pick:['PAN card','Voter ID','Driving licence','Bank passbook with photo'] },
+        { id:'dobT', t:'Proof of date of birth', d:'Pick one.', tag:'Original', pick:['Birth certificate','SSLC / Class 10 certificate','PAN card','Driving licence'] },
+        { id:'oldT', t:'Your old passport', d:'Only for a Tatkal renewal.', tag:'Original', opt:true },
+        COPIES ],
+      steps:[
+        ['Fill the form and choose Tatkal','On passportindia.gov.in or the mPassport Seva app.'],
+        ['Pay the Tatkal fee and book','Slots are on the same portal as normal ones.'],
+        ['Arrive 15 minutes early','With originals and self-attested copies.'],
+        ['Go through counters A, B and C','Same as a normal application.'],
+        ['Passport by Speed Post','Police verification may happen after it’s issued.'] ],
+      watch:[
+        'Tatkal moves police verification later. It doesn’t skip it.',
+        'Agents have no special access to Tatkal slots. Everyone books on the same portal.',
+        PSP_WATCH ],
+      pay:{ lines:[ {l:'Tatkal, 36 pages', a:5000}, {l:'Tatkal, 60 pages', a:6000, opt:true} ],
+        official:5000, fairHi:5700, over:6500, base:'official fee',
+        say:'The official Tatkal fee for a 36-page passport is ₹5,000, paid on passportindia.gov.in.' } }
+  ]
+},
+{
+  id:'rent', name:'Rent agreement', title:'Make a rent agreement', icon:'home', authority:'Karnataka Stamps & Registration',
+  blurb:'The standard 11-month lease on e-stamp paper. No government office.',
+  meta:['11-month lease','No office visit','₹100–₹500 stamp'], short:'11-month lease on e-stamp', chan:'online', chanTxt:'No office',
+  offices:[],
+  links:[{l:'SHCIL e-stamping', u:'https://www.shcilestamp.com'},{l:'Kaveri, Karnataka', u:'https://kaveri.karnataka.gov.in'}],
+  go:{ t:'No government office needed', d:'Buy the e-stamp online on SHCIL, or at an authorised e-stamp centre or bank. Sign at home with two witnesses.', best:'Buy the e-stamp on or before the day you sign, in the tenant’s or the landlord’s name.', board:['Best time','ANY DAY','Queue','None'] },
+  variants:[
+    { id:'lease', label:'11-month home lease', kw:'rent rental agreement lease house flat tenant landlord stamp paper e-stamp 11 month pg',
+      summary:'The standard Bengaluru rental agreement. Printed with an e-stamp certificate and signed by both sides and two witnesses. No registration needed.',
+      mode:'online', time:'About an hour, signing included', result:'Valid as soon as everyone signs',
+      bring:[
+        { id:'lid', t:'Landlord’s ID', d:'Aadhaar or PAN copy.', tag:'Copy' },
+        { id:'tid', t:'Tenant’s ID', d:'Aadhaar or PAN copy for each adult tenant.', tag:'Copy' },
+        { id:'terms', t:'The agreed terms, in writing', d:'Rent, deposit, maintenance, start date, notice period and lock-in.', tag:'Online' },
+        { id:'wit', t:'Two witnesses', d:'Name, address and signature of each. Friends or neighbours are fine.', tag:'Original' },
+        { id:'estamp', t:'e-stamp certificate', d:'Usually ₹100 to ₹500 for an 11-month lease, depending on rent and deposit.', tag:'Original' },
+        { id:'own', t:'Proof the landlord owns the flat', d:'A property tax receipt or khata. Worth asking for.', tag:'Copy', opt:true } ],
+      steps:[
+        ['Agree the terms','Rent, deposit, maintenance, notice period, lock-in, and what can be deducted from the deposit.'],
+        ['Draft the agreement','Any standard 11-month template works. Fill in names, address and terms.'],
+        ['Buy the e-stamp','Online on SHCIL or at an authorised centre, in either party’s name.'],
+        ['Print and sign','Print with the e-stamp certificate. Both sides sign every page. Two witnesses sign the last one.'],
+        ['Keep a copy each','Each side keeps an original. Scan one for your records.'] ],
+      watch:[
+        'Signing for 12 months or more? The lease must be registered at a Sub-Registrar office. That guide comes in the next pilot phase.',
+        'Write down when the deposit comes back and what can be deducted from it.',
+        'Notarising is optional. It doesn’t replace registration.' ],
+      pay:{ lines:[ {l:'e-stamp duty', r:'₹100–₹500', note:'Depends on rent and deposit'}, {l:'Drafting and printing', r:'₹200–₹800', opt:true}, {l:'Notary', r:'₹100–₹300', opt:true} ],
+        official:200, fairHi:1500, over:2500, base:'typical e-stamp duty', total:'₹100–₹500', totalLabel:'Stamp duty you must pay', useRatio:false,
+        say:'For an 11-month lease you only must pay the e-stamp, usually ₹100 to ₹500. Full-service help with drafting rarely needs to cost more than ₹1,500.' } }
+  ]
+},
+{
+  id:'itr', name:'Tax return', title:'File your tax return', icon:'receipt', authority:'Income Tax Department',
+  blurb:'Missed 31 July? File a belated return for FY 2025-26 before 31 December.',
+  meta:['Belated return','Fully online','Filing is free'], short:'Belated return, till 31 Dec', chan:'online', chanTxt:'Online',
+  offices:[],
+  links:[{l:'Income Tax e-filing', u:'https://www.incometax.gov.in'}],
+  go:{ t:'Fully online', d:'File on incometax.gov.in with your PAN. There’s no office to visit.', best:'File now. The portal slows down in the last week of December, and interest on unpaid tax grows every month.', deadline:'2026-12-31T23:59:59+05:30' },
+  variants:[
+    { id:'late', label:'Belated return, FY 2025-26', kw:'itr income tax return file late belated missed deadline 139(4) 234f',
+      summary:'Missed the 31 July deadline? You can still file for FY 2025-26 until 31 December 2026, with a late fee.',
+      mode:'online', time:'30–60 min for a simple salaried return', result:'Any refund comes after processing',
+      bring:[
+        { id:'pan', t:'PAN, linked with Aadhaar', d:'You log in to the portal with it.', tag:'Online' },
+        { id:'f16', t:'Form 16 from your employer', d:'Shows your salary and the tax already deducted.', tag:'Scan' },
+        { id:'ais', t:'AIS and Form 26AS', d:'Download both from the portal. They list income the department already knows about.', tag:'Online' },
+        { id:'bank', t:'A pre-validated bank account', d:'Needed for any refund. Validate it in your portal profile.', tag:'Online' },
+        { id:'oth', t:'Interest and capital gains statements', d:'Only if you have this income.', tag:'Scan', opt:true } ],
+      steps:[
+        ['Log in','incometax.gov.in, with your PAN and password or an Aadhaar OTP.'],
+        ['Start a belated return','File ITR for assessment year 2026-27 under section 139(4).'],
+        ['Check the pre-filled data','Compare it with your Form 16 and AIS. Add anything missing.'],
+        ['Pay the late fee and any tax','Use e-Pay Tax on the portal before you submit.'],
+        ['Submit and e-verify','Within 30 days. An Aadhaar OTP is the fastest way.'] ],
+      watch:[
+        'A belated return uses the new tax regime only. You can’t switch to the old regime now.',
+        'You can’t carry forward capital or business losses on a belated return.',
+        'Not e-verified within 30 days? The return counts as not filed.' ],
+      pay:{ dynamic:'itr' } }
+  ]
+}
+];
+const T = Object.fromEntries(TASKS.map(t => [t.id, t]));
+
+const OFFICES = {
+  'ask-southend': { task:'aadhaar', kind:'ask', name:'Aadhaar Seva Kendra', short:'ASK South End', area:'South End Circle, Basavanagudi',
+    addr:'36, Pattalamma Temple Road, next to Pai Vista Convention Centre, 560004', hours:'Typically 9:30 AM–5:30 PM, every day', appt:'Walk in, or book a slot on the UIDAI site',
+    mult:.92, seed:23, tip:'Our estimate: calmer than Majestic. Mid-week afternoons are the quietest.' },
+  'ask-majestic': { task:'aadhaar', kind:'ask', name:'Aadhaar Seva Kendra', short:'ASK Majestic', area:'Gandhi Nagar, near Majestic',
+    addr:'Grand Majestic Mall, #32, 2nd Cross, 6th Main, Gandhi Nagar, 560009', hours:'Typically 9:30 AM–5:30 PM, every day', appt:'Walk in, or book a slot on the UIDAI site',
+    mult:1.08, seed:11, tip:'Our estimate: it’s next to the city bus stand, so the rush builds fast after 10:30.' },
+  'psk-lalbagh': { task:'passport', kind:'psk', name:'Passport Seva Kendra', short:'PSK Lalbagh', area:'Lalbagh Road',
+    addr:'Prestige Libra, #45, Lalbagh Road, 560027', hours:'Appointments roughly 9 AM–4 PM, Mon–Fri', appt:'Appointment only, booked on passportindia.gov.in',
+    mult:1.05, seed:37, tip:'Take the earliest slot you can get. Delays add up through the day.' },
+  'psk-whitefield': { task:'passport', kind:'psk', name:'Passport Seva Kendra', short:'PSK Whitefield', area:'GM Tech Park, Whitefield',
+    addr:'GM Tech Park, Road No. 3, EPIP Zone, Whitefield, near Nallurhalli Metro', hours:'Appointments roughly 9 AM–4 PM, Mon–Fri', appt:'Appointment only, booked on passportindia.gov.in',
+    mult:.96, seed:53, moved:'Moved here from Sai Arcade, Marathahalli on 5 Oct 2026.', tip:'Nallurhalli Metro is a short walk away. The metro beats the Outer Ring Road traffic.' }
+};
+const PROFILE = {
+  ask:{ days:[0,1,2,3,4,5,6], start:9.5, slots:8, curve:[.78,.88,1,.95,.8,.66,.52,.42], day:[1,.7,.64,.72,.84,.98,.92], wait:[10,85], unit:'wait', lastFlag:true },
+  psk:{ days:[0,1,2,3,4], start:9, slots:7, curve:[.3,.44,.64,.84,.92,.78,.62], day:[.96,.78,.74,.8,.9], wait:[40,110], unit:'inside', lastFlag:false }
+};
+
+/* ───────────────────────── state ───────────────────────── */
+let checks = store.get('checks', {});
+let kit = store.get('kit', []);
+const ui = {
+  office: store.get('office', {}),
+  itr: store.get('itr', 'low'),
+  quote: {},
+  qopen: {},
+  chk: { key:'passport.fresh', q:'4500', example:true },
+  filter: 'all',
+  feat: 0,
+  sel: null
+};
+
+/* ───────────────────────── model ───────────────────────── */
+function vOf(t, vid){ return t.variants.find(v => v.id === vid) || t.variants[0]; }
+function hash3(a, b, c){ let x = (a * 73856093) ^ (b * 19349663) ^ (c * 83492791); x = Math.imul(x ^ (x >>> 13), 1274126177); x ^= x >>> 16; return ((x >>> 0) % 1000) / 1000; }
+function crowd(oid, d, s){
+  const o = OFFICES[oid], p = PROFILE[o.kind];
+  if(!p.days.includes(d)) return null;
+  const v = p.curve[s] * p.day[d] * o.mult + (hash3(o.seed, d, s) - .5) * .1;
+  return Math.max(.06, Math.min(1, v));
+}
+const level = v => v < .38 ? 0 : v < .52 ? 1 : v < .66 ? 2 : v < .8 ? 3 : 4;
+function mins(oid, v){ const p = PROFILE[OFFICES[oid].kind]; return Math.round((p.wait[0] + v * p.wait[1]) / 5) * 5; }
+function fmtTime(h, ap){ const H = Math.floor(h), M = Math.round((h - H) * 60); const h12 = ((H + 11) % 12) + 1; return h12 + ':' + String(M).padStart(2, '0') + (ap ? (H < 12 ? ' AM' : ' PM') : ''); }
+function best(oid, n = 3){
+  const p = PROFILE[OFFICES[oid].kind], cells = [];
+  for(const d of p.days) for(let s = 0; s < p.slots; s++){ if(p.lastFlag && s === p.slots - 1) continue; cells.push({ d, s, v:crowd(oid, d, s) }); }
+  cells.sort((a, b) => a.v - b.v);
+  const out = [], used = new Set();
+  for(const c of cells){ if(out.length >= n) break; if(!used.has(c.d)){ out.push(c); used.add(c.d); } }
+  return out;
+}
+function istNow(){
+  try{
+    const f = new Intl.DateTimeFormat('en-US', { timeZone:'Asia/Kolkata', weekday:'short', hour:'numeric', minute:'numeric', hourCycle:'h23' });
+    const parts = Object.fromEntries(f.formatToParts(new Date()).map(p => [p.type, p.value]));
+    const d = DAYS.indexOf(parts.weekday); let H = +parts.hour; if(H === 24) H = 0;
+    if(d < 0 || isNaN(H)) throw 0;
+    return { d, h:H + (+parts.minute) / 60 };
+  }catch(e){ const n = new Date(); return { d:(n.getDay() + 6) % 7, h:n.getHours() + n.getMinutes() / 60 }; }
+}
+function nowStatus(oid){
+  const o = OFFICES[oid], p = PROFILE[o.kind], n = istNow(), end = p.start + p.slots;
+  if(p.days.includes(n.d) && n.h >= p.start && n.h < end){
+    const s = Math.min(p.slots - 1, Math.floor(n.h - p.start)), v = crowd(oid, n.d, s), lv = level(v);
+    return { open:true, d:n.d, s, lv, text:LEVELS[lv] + ' right now', sub:'about ' + mins(oid, v) + ' min ' + p.unit };
+  }
+  for(let k = 0; k < 8; k++){
+    const d = (n.d + k) % 7;
+    if(!p.days.includes(d)) continue;
+    if(k === 0 && n.h >= p.start) continue;
+    const when = k === 0 ? 'today' : k === 1 ? 'tomorrow' : DAYS_LONG[d];
+    return { open:false, text:'Closed now', sub:'opens ' + when + ', ' + fmtTime(p.start, true) };
+  }
+  return { open:false, text:'Closed now', sub:'' };
+}
+function daysLeft(iso){ return Math.ceil((new Date(iso) - new Date()) / 86400000); }
+function getPay(t, v){
+  if(v.pay.dynamic === 'itr'){
+    const inc = ui.itr, fee = inc === 'none' ? 0 : inc === 'low' ? 1000 : 5000;
+    return {
+      lines:[ {l:'Filing on the portal', a:0},
+        {l:'Late fee, section 234F', a:fee, note: inc === 'none' ? 'Income below the basic exemption limit' : inc === 'low' ? 'Total income up to ₹5 lakh' : 'Total income above ₹5 lakh'},
+        {l:'Interest on unpaid tax', r:'1% a month', note:'Only if you still owe tax', opt:true} ],
+      official:fee, fairHi:fee + 1500, over:fee + 3000, base: fee ? 'late fee' : 'official fee', useRatio:false,
+      total:inr(fee), totalLabel:'You pay the department',
+      say:'Filing is free on incometax.gov.in and your late fee is ' + inr(fee) + '. Help with a simple return usually adds ₹500 to ₹1,500.'
+    };
+  }
+  return v.pay;
+}
+function progress(v, st){
+  const req = v.bring.filter(i => !i.opt);
+  const done = req.filter(i => i.pick ? st[i.id] != null : !!st[i.id]).length;
+  return { done, total:req.length };
+}
+function goLine(t, v){
+  if(t.offices.length && v.mode !== 'online'){
+    const oid = officeFor(t), b = best(oid, 1)[0], p = PROFILE[OFFICES[oid].kind];
+    return { main:DAYS[b.d] + ', ' + fmtTime(p.start + b.s, true), sub:OFFICES[oid].short + ' · about ' + mins(oid, b.v) + ' min ' + p.unit, oid, b };
+  }
+  if(t.go && t.go.deadline){ const n = daysLeft(t.go.deadline); return { main: n > 0 ? plural(n, 'day') + ' left' : 'Window closed', sub:'Online, before 31 Dec 2026' }; }
+  return { main:'Online, any time', sub:'No queue' };
+}
+function officeFor(t){ const s = ui.office[t.id]; return t.offices.includes(s) ? s : t.offices[0]; }
+
+/* ───────────────────────── shared partials ───────────────────────── */
+const MQ = matchMedia('(max-width: 820px)');
+const mobile = () => MQ.matches;
+const SECS = ['bring','go','pay','steps'];
+const SECV = { bring:'--bring', go:'--go', pay:'--pay', steps:'--fg-2' };
+const SECL = { bring:'Bring', go:'Go', pay:'Pay', steps:'Steps' };
+function secTitle(sec, t, v){
+  if(sec === 'bring') return v.mode === 'online' ? 'What to keep ready' : 'What to carry';
+  if(sec === 'go') return t.offices.length && v.mode !== 'online' ? 'When to go' : 'Where to do it';
+  if(sec === 'pay') return 'What it should cost';
+  return 'How it works';
+}
+const chev = () => '<svg class="ic chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
+const backIcon = '<svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>';
+function secHead(sec, t, v, right = ''){
+  return `<div class="ph"><div><div class="pk" style="--c:var(${SECV[sec]})"><i class="glow"></i>${SECL[sec]}</div><h2 id="${sec}-h">${secTitle(sec, t, v)}</h2></div>${right}</div>`;
+}
+function heatmap(oid){
+  const o = OFFICES[oid], p = PROFILE[o.kind], bs = best(oid, 3), now = nowStatus(oid);
+  let h = `<div class="heat-wrap"><div class="heat" style="--cols:${p.slots}" data-heat="${oid}" role="group" aria-label="Estimated rush by hour at ${o.short}"><span></span>`;
+  for(let s = 0; s < p.slots; s++) h += `<span class="hh">${fmtTime(p.start + s)}</span>`;
+  for(const d of p.days){
+    h += `<span class="hd">${DAYS[d]}</span>`;
+    for(let s = 0; s < p.slots; s++){
+      const v = crowd(oid, d, s), lv = level(v);
+      const isBest = bs.some(b => b.d === d && b.s === s), isNow = now.open && now.d === d && now.s === s, last = p.lastFlag && s === p.slots - 1;
+      h += `<button type="button" class="cell l${lv}${isBest ? ' best' : ''}${isNow ? ' now' : ''}${last ? ' last' : ''}" data-d="${d}" data-s="${s}" aria-label="${DAYS_LONG[d]} ${fmtTime(p.start + s, true)}: ${LEVELS[lv]}, about ${mins(oid, v)} minutes ${p.unit}${isBest ? ', a best slot' : ''}"></button>`;
+    }
+  }
+  h += `</div></div>
+  <div class="hfoot"><div class="legend"><span>Quiet</span><span class="ramp">${[0,1,2,3,4].map(i => `<i class="l${i}"></i>`).join('')}</span><span>Packed</span><span class="lbest"><i class="lb"></i>Best</span></div><span class="est">${icon('info', 14)}Estimate, not live data</span></div>
+  <p class="hdetail" data-hdetail aria-live="polite">Tap a slot to see the expected ${p.unit === 'wait' ? 'wait' : 'time inside'}.</p>`;
+  return h;
+}
+function nowPill(oid){
+  const n = nowStatus(oid);
+  const col = n.open ? LEVEL_VAR[n.lv] : '--fg-3';
+  return `<span class="now ${n.open ? 'open' : ''}" style="--lc:var(${col})"><i></i><b>${n.text}</b><span>${n.sub}</span></span>`;
+}
+function bestBoard(oid){
+  const o = OFFICES[oid], p = PROFILE[o.kind], bs = best(oid, 3), b = bs[0];
+  return `<div class="board" aria-label="Best time to go">
+      <div><small>Best time to go</small><div class="doto">${DAYS[b.d].toUpperCase()} ${fmtTime(p.start + b.s, true)}</div></div>
+      <div class="bm"><small>Expected</small><b>~${mins(oid, b.v)} min ${p.unit}</b><span>${LEVELS[level(b.v)]}</span></div>
+    </div>
+    <p class="alts">Also good: ${bs.slice(1).map(x => `<b>${DAYS[x.d]} ${fmtTime(p.start + x.s, true)}</b>`).join(' and ')}.</p>`;
+}
+function officeAddr(oid){
+  const o = OFFICES[oid];
+  return `<div class="oaddr"><p>${icon('pin', 16)}<span><b>${o.name}, ${o.area}</b><br>${o.addr}</span></p><p>${icon('clock', 16)}<span>${o.hours}. ${o.appt}.</span></p>${o.moved ? `<span class="notice">${icon('info', 15)}${o.moved}</span>` : ''}</div>`;
+}
+function heatOpen(){ return ui.heatOpen != null ? ui.heatOpen : !mobile(); }
+function officeBlock(oid){
+  return `${bestBoard(oid)}<details class="more" data-heatd${heatOpen() ? ' open' : ''}><summary>${icon('clock', 18)}<span>See every hour</span>${chev()}</summary><div class="mbody">${heatmap(oid)}</div></details>${officeAddr(oid)}`;
+}
+function nowLine(oid){
+  const n = nowStatus(oid), col = n.open ? LEVEL_VAR[n.lv] : '--fg-3';
+  return `<span class="nowl" style="--lc:var(${col})"><i></i>${n.text}${n.sub ? ' · ' + n.sub : ''}</span>`;
+}
+function scaleFor(p){
+  const min = p.official >= 1000 ? p.official * .7 : 0, max = p.over * 1.25;
+  return x => Math.max(0, Math.min(100, (x - min) / (max - min) * 100));
+}
+function verdict(p, q){
+  const has = q !== '' && q != null && !isNaN(+q);
+  if(!has) return `<div class="verdict idle"><span class="vchip"><i></i>Waiting for a quote</span><p class="vt">Type what you were asked to pay.</p><p class="vd">We compare it with the ${p.base} and a fair charge for help.</p></div>`;
+  q = +q;
+  let c, chip, t, d;
+  const ratio = p.useRatio !== false && p.official > 0;
+  if(q < p.official - .5){ c = 'info'; chip = 'Below the ' + p.base; t = 'That’s ' + inr(p.official - q) + ' less than the ' + p.base + '.'; d = 'Ask what’s included. You may be asked to pay the rest later.'; }
+  else if(q <= p.official + .5){ c = 'good'; chip = 'Exactly right'; t = 'That’s the ' + p.base + '.'; d = 'Pay on the official site or at an authorised centre, and keep the receipt.'; }
+  else if(q <= p.fairHi){ c = 'good'; chip = 'Fair'; t = inr(q - p.official) + ' above the ' + p.base + ', a normal charge for help.'; d = 'Ask for a receipt that shows the official fee separately.'; }
+  else if(q <= p.over){ c = 'warn'; chip = 'On the high side'; t = inr(q - p.fairHi) + ' more than a fair price.'; d = 'Help usually costs up to ' + inr(p.fairHi) + ' in total. Ask for an itemised receipt, or do it yourself.'; }
+  else { c = 'bad'; chip = 'Overcharged'; t = ratio ? 'That’s ' + (q / p.official).toFixed(1).replace(/\.0$/, '') + ' times the ' + p.base + '.' : p.official === 0 && !p.total ? 'That’s ' + inr(q) + ' for something that’s free.' : inr(q - p.fairHi) + ' above a fair price.'; d = p.say; }
+  return `<div class="verdict ${c}"><span class="vchip"><i></i>${chip}</span><p class="vt">${t}</p><p class="vd">${d}</p></div>`;
+}
+function quoteOut(p, q, example){
+  const pos = scaleFor(p), o = pos(p.official), f = pos(p.fairHi), h = pos(p.over);
+  const has = q !== '' && q != null && !isNaN(+q);
+  let mk = '';
+  if(has){ const x = pos(+q); mk = `<div class="rm${x < 22 ? ' l' : x > 78 ? ' r' : ''}" style="left:${x}%"><b>${inr(+q)}${example ? ' · example' : ''}</b></div>`; }
+  const offTxt = p.total && p.useRatio === false && p.base !== 'late fee' && p.base !== 'official fee' ? p.total : (p.official === 0 ? 'Free' : inr(p.official));
+  return `<div class="ruler" aria-hidden="true"><div class="rmk">${mk}</div>
+      <div class="rz"><i class="z0" style="flex-grow:${Math.max(o, .01)}"></i><i class="z1" style="flex-grow:${f - o}"></i><i class="z2" style="flex-grow:${h - f}"></i><i class="z3" style="flex-grow:${100 - h}"></i></div>
+    </div>
+    <div class="rleg"><span><i class="s0"></i>${p.base === 'typical e-stamp duty' ? 'Stamp duty' : p.base === 'late fee' ? 'Late fee' : 'Official'} <b>${offTxt}</b></span><span><i class="s1"></i>Fair up to <b>${inr(p.fairHi)}</b></span><span><i class="s2"></i>High up to <b>${inr(p.over)}</b></span><span><i class="s3"></i>Overcharged above</span></div>
+    <div aria-live="polite">${verdict(p, q)}</div>`;
+}
+function variantOptions(selected){
+  return TASKS.map(t => `<optgroup label="${t.name}">${t.variants.map(v => `<option value="${t.id}.${v.id}"${selected === t.id + '.' + v.id ? ' selected' : ''}>${t.name}: ${v.label}</option>`).join('')}</optgroup>`).join('');
+}
+function keyParts(key){ const [a, b] = key.split('.'); const t = T[a]; return { t, v:vOf(t, b) }; }
+function itrSeg(){
+  return `<div class="field"><span class="flabel">Your total income for FY 2025-26</span><div class="seg" role="group" aria-label="Your total income">${[['none','Below exemption limit'],['low','Up to ₹5 lakh'],['high','Above ₹5 lakh']].map(o => `<button type="button" data-itr="${o[0]}" aria-pressed="${ui.itr === o[0]}">${o[1]}</button>`).join('')}</div></div>`;
+}
+function qin(id, val, attr, example){
+  return `<div class="qin"><span>₹</span><input id="${id}" inputmode="numeric" placeholder="Type the total amount" value="${val}" ${attr} autocomplete="off">${example ? '<span class="tag" data-ex>Example</span>' : ''}</div>`;
+}
+
+/* ───────────────────────── pages ───────────────────────── */
+const FEATURES = [ {t:'aadhaar', v:'address', o:'ask-southend', done:2}, {t:'passport', v:'fresh', o:'psk-lalbagh', done:3}, {t:'pan', v:'instant', done:1} ];
+function sparkline(oid, d){
+  const p = PROFILE[OFFICES[oid].kind], W = 86, H = 26, n = p.slots;
+  const pts = []; for(let s = 0; s < n; s++){ const v = crowd(oid, d, s); pts.push([2 + s * (W - 4) / (n - 1), H - 3 - v * (H - 8)]); }
+  const b = best(oid, 1)[0], bp = pts[b.s];
+  const line = pts.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(' ');
+  return `<svg class="spark" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true"><path d="${line} L${W - 2} ${H} L2 ${H} Z" fill="currentColor" opacity=".16"/><path d="${line}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="${bp[0].toFixed(1)}" cy="${bp[1].toFixed(1)}" r="3.2" fill="currentColor"/></svg>`;
+}
+function ticketHTML(i){
+  const f = FEATURES[i], t = T[f.t], v = vOf(t, f.v), p = getPay(t, v);
+  const req = v.bring.filter(x => !x.opt);
+  const dots = req.map((_, k) => `<i class="${k < f.done ? 'on' : ''}"></i>`).join('');
+  let goV, goR, board;
+  if(f.o){
+    const o = OFFICES[f.o], pr = PROFILE[o.kind], b = best(f.o, 1)[0];
+    goV = `${DAYS_LONG[b.d]}, ${fmtTime(pr.start + b.s, true)}<small>${o.short} · ${LEVELS[level(b.v)].toLowerCase()}</small>`;
+    goR = sparkline(f.o, b.d);
+    board = `<div><small>Best time</small><div class="doto">${DAYS[b.d].toUpperCase()} ${fmtTime(pr.start + b.s, true)}</div></div><div class="bm"><small>Expected</small><b>~${mins(f.o, b.v)} min</b><span>${pr.unit}</span></div>`;
+  }else{
+    goV = `Online, any time<small>incometax.gov.in · no queue</small>`;
+    goR = `<span class="tag">No visit</span>`;
+    board = `<div><small>You pay</small><div class="doto">FREE</div></div><div class="bm"><small>Time</small><b>~10 min</b><span>at home</span></div>`;
+  }
+  return `<div class="t-head"><span class="ti">${icon(t.icon, 22)}</span><div><b>${t.name}</b><span class="s">${v.label}</span></div><span class="tag">Example trip</span></div>
+    <div class="t-row" style="--c:var(--bring)"><span class="t-k">Bring</span><span class="t-v">${plural(req.length, 'item')}<small>${req.slice(0, 3).map(x => x.s || x.t).join(', ')}</small></span><span class="dots" aria-label="${f.done} of ${req.length} ready">${dots}</span></div>
+    <div class="t-row" style="--c:var(--go)"><span class="t-k">Go</span><span class="t-v">${goV}</span>${goR}</div>
+    <div class="t-row" style="--c:var(--pay)"><span class="t-k">Pay</span><span class="t-v">${p.official === 0 ? 'Free' : inr(p.official)}<small>Fair with help: up to ${inr(p.fairHi)}</small></span><span class="tag">Official</span></div>
+    <div class="board">${board}</div>`;
+}
+const HERO_H1 = `<h1 class="display"><span>What to <em style="--c:var(--bring)">bring</em><span class="stop">.</span></span><span>When to <em style="--c:var(--go)">go</em><span class="stop">.</span></span><span>What to <em style="--c:var(--pay)">pay</em><span class="stop">.</span></span></h1>`;
+const liveTag = () => `<span class="live"><i></i>Bengaluru pilot · fees checked ${CHECKED}</span>`;
+const searchBox = () => `<button class="bigsearch glass" type="button" data-open-palette>${icon('search', 20)}<span class="lbl">What do you need to get done?</span><span class="gokey">${icon('arrow', 18)}</span></button>`;
+function renderHome(){
+  if(mobile()) return `
+  <section class="mhero">
+    ${liveTag()}
+    ${HERO_H1}
+    <p class="lede">Plain-language guides for government paperwork in Bengaluru. One trip, the official price.</p>
+    ${searchBox()}
+  </section>
+  <section class="mhome" aria-labelledby="g-h">
+    <h2 class="eyebrow" id="g-h">Pick a task</h2>
+    <div class="mlist">${TASKS.map(t => `<a class="mrow glass" href="#${t.id}"><span class="ti">${icon(t.icon, 22)}</span><span class="mt"><b>${t.title}</b><small>${t.short}</small></span>${chev()}</a>`).join('')}</div>
+    <a class="aboutlink" href="#about">${icon('info', 18)}<span>About this pilot</span>${chev()}</a>
+  </section>`;
+  return `
+  <section class="hero">
+    <div class="hero-copy">
+      ${liveTag()}
+      ${HERO_H1}
+      <p class="lede">Plain-language guides for Aadhaar, PAN, passports, rent agreements and tax returns. Finish in one trip, at the official price.</p>
+      ${searchBox()}
+    </div>
+    <div class="hero-art">
+      <canvas id="guilloche" aria-hidden="true"></canvas>
+      <article class="ticket glass" id="ticket" aria-live="off">${ticketHTML(ui.feat)}</article>
+      <div class="feat" role="group" aria-label="Example trips">${FEATURES.map((f, i) => `<button type="button" data-feat="${i}" aria-pressed="${i === ui.feat}">${T[f.t].name}</button>`).join('')}</div>
+    </div>
+  </section>
+  <section class="section" id="guides" aria-labelledby="g-h" style="padding-top:36px">
+    <div class="sec-head" style="margin-bottom:18px"><h2 class="h2" id="g-h" style="font-size:clamp(24px,2.6vw,30px)">Pick what you need to get done</h2></div>
+    <div class="tasks5">${TASKS.map(t => `<a class="tbtn glass spot" href="#${t.id}"><span class="ti">${icon(t.icon, 22)}</span><span><b>${t.name}</b><small>${t.short}</small></span><span class="tfoot"><span class="state" style="--c:var(${t.chan === 'visit' ? '--pay' : '--go'})">${t.chanTxt}</span>${icon('arrow', 18)}</span></a>`).join('')}</div>
+  </section>`;
+}
+
+/* guide: checklist */
+function itemHTML(it, st, key){
+  const id = 'c-' + idOf(key) + '-' + it.id, on = !!st[it.id];
+  return `<label class="ci${on ? ' done' : ''}" for="${id}" data-item="${it.id}"><input type="checkbox" id="${id}"${on ? ' checked' : ''}><span class="box">${icon('check', 15, 2.6)}</span><span class="ct"><b>${it.t}</b><small>${it.d}</small></span><span class="tag">${it.opt ? 'If needed' : it.tag}</span></label>`;
+}
+function groupHTML(it, st, key){
+  const gid = 'g-' + idOf(key) + '-' + it.id, sel = st[it.id];
+  return `<div class="ci${sel != null ? ' done' : ''}" role="radiogroup" aria-labelledby="${gid}" data-group="${it.id}"><span class="box">${icon('check', 15, 2.6)}</span><span class="ct"><b id="${gid}">${it.t}</b><small>${it.d}</small></span><span class="tag">${it.opt ? 'If needed' : it.tag}</span>
+    <div class="opts">${it.pick.map((o, i) => `<label class="opt" for="${gid}-${i}"><input type="radio" name="${gid}" id="${gid}-${i}" value="${i}"${sel === i ? ' checked' : ''}><span>${o}</span></label>`).join('')}</div></div>`;
+}
+function bringSection(t, v, key){
+  const st = checks[key] || {}, pr = progress(v, st);
+  return `<section class="gsec" id="bring" aria-labelledby="bring-h">
+    ${secHead('bring', t, v, `<div class="prog"><span data-progtxt><b>${pr.done}</b> of ${pr.total} ready</span><div class="bar"><i data-bar style="width:${pr.done / pr.total * 100}%"></i></div></div>`)}
+    <div class="cl" data-cl="${key}">${v.bring.map(it => it.pick ? groupHTML(it, st, key) : itemHTML(it, st, key)).join('')}</div>
+    ${v.note ? `<p class="note">${icon('info', 18)}<span>${v.note}</span></p>` : ''}
+  </section>`;
+}
+function goSection(t, v){
+  let body = '';
+  if(v.online) body += `<div class="online${v.online.soft ? ' soft' : ''}"><span class="ti">${icon('monitor', 20)}</span><div><h3>${v.online.t}</h3><p>${v.online.d}</p><a class="btn sm" href="${v.online.u}" target="_blank" rel="noopener">${v.online.ul}${icon('ext', 15)}</a></div></div>`;
+  if(t.offices.length && v.mode !== 'online'){
+    const oid = officeFor(t);
+    body += `<div class="orow"><div class="offices" role="group" aria-label="Choose an office">${t.offices.map(id => `<button type="button" class="chip" data-office="${id}" data-task="${t.id}" aria-pressed="${id === oid}">${OFFICES[id].short}</button>`).join('')}</div><span data-nowslot>${nowPill(oid)}</span></div><div class="obody" data-officebody>${officeBlock(oid)}</div>`;
+  }else if(t.go){
+    let board;
+    if(t.go.deadline){ const n = daysLeft(t.go.deadline); board = `<div><small>Days left to file</small><div class="doto">${n > 0 ? n + ' DAYS' : 'CLOSED'}</div></div><div class="bm"><small>Deadline</small><b>31 Dec 2026</b><span>belated returns</span></div>`; }
+    else { const g = t.go.board; board = `<div><small>${g[0]}</small><div class="doto">${g[1]}</div></div><div class="bm"><small>${g[2]}</small><b>${g[3]}</b><span>no office</span></div>`; }
+    body += `<div class="noq"><span class="ti">${icon('monitor', 20)}</span><div><h3>${t.go.t}</h3><p>${t.go.d}</p></div></div><div class="board">${board}</div><p class="tipline">${icon('clock', 18)}<span>${t.go.best}</span></p>`;
+  }
+  return `<section class="gsec" id="go" aria-labelledby="go-h">${secHead('go', t, v)}${body}</section>`;
+}
+function passportTable(v){
+  const rows = [['Fresh or renewal, 36 pages', 2500, 5000], ['Fresh or renewal, 60 pages', 3500, 6000], ['Under 18, 36 pages', 1750, 4250]];
+  const tat = v.id === 'tatkal';
+  return `<div class="ptable-wrap"><table class="ptable"><thead><tr><th>Passport fees</th><th class="n">Normal</th><th class="n">Tatkal</th></tr></thead><tbody>${rows.map((r, i) => `<tr><td>${r[0]}</td><td class="n${i === 0 && !tat ? ' hit' : ''}">${inr(r[1])}</td><td class="n${i === 0 && tat ? ' hit' : ''}">${inr(r[2])}</td></tr>`).join('')}<tr><td>Police clearance certificate</td><td class="n">₹750</td><td class="n">–</td></tr></tbody></table><p class="pcap">Fees from 1 July 2026. Children under 8 and adults over 60 get 10% off a fresh passport.</p></div>`;
+}
+function paySection(t, v, key){
+  const p = getPay(t, v), q = ui.quote[key] ?? '', qid = 'q-' + idOf(key), open = ui.qopen[key] || q !== '';
+  const total = p.total || (p.official === 0 ? 'Free' : inr(p.official));
+  return `<section class="gsec" id="pay" aria-labelledby="pay-h">
+    ${secHead('pay', t, v)}
+    ${t.id === 'itr' ? itrSeg() : ''}
+    <div class="ftotal"><div><span>${p.totalLabel || 'Official fee you pay'}</span><small>Checked ${CHECKED}</small></div><b>${total}</b></div>
+    <div class="flines">${p.lines.map(l => `<div class="fl${l.opt ? ' optl' : ''}"><span><b>${l.l}</b>${l.note ? `<small>${l.note}</small>` : ''}${l.opt ? '<small>Optional</small>' : ''}</span><span class="amt">${l.r || (l.a === 0 ? 'Free' : inr(l.a))}</span></div>`).join('')}</div>
+    <div class="morelist">
+      <details class="more" data-qd="${key}"${open ? ' open' : ''}><summary>${icon('rupee', 18)}<span>Got a quote? Check if it’s fair</span>${chev()}</summary>
+        <div class="mbody" data-qc="${key}"><label class="sr" for="${qid}">Amount you were quoted</label>${qin(qid, q, `data-quote="${key}"`)}<div class="qout" data-qout>${quoteOut(p, q)}</div></div></details>
+      ${t.feeTable ? `<details class="more"><summary>${icon('passport', 18)}<span>All passport fees</span>${chev()}</summary><div class="mbody">${passportTable(v)}</div></details>` : ''}
+    </div>
+  </section>`;
+}
+function stepsSection(t, v){
+  const modeTxt = v.mode === 'online' ? 'Fully online' : v.mode === 'either' ? 'Online or at a centre' : 'Visit needed';
+  return `<section class="gsec" id="steps" aria-labelledby="steps-h">
+    ${secHead('steps', t, v)}
+    <div class="vmeta"><span class="pill">${icon(v.mode === 'office' ? 'queue' : 'monitor', 15)}${modeTxt}</span><span class="pill">${icon('clock', 15)}${v.time}</span><span class="pill">${icon('check', 15)}${v.result}</span></div>
+    <ol class="steps">${v.steps.map(s => `<li><div><b>${s[0]}</b><span>${s[1]}</span></div></li>`).join('')}</ol>
+    <div class="watchbox"><h3 class="h3">Watch out for</h3><ul class="watch">${v.watch.map(w => `<li>${icon('alert', 18)}<span>${w}</span></li>`).join('')}</ul></div>
+    ${t.help ? `<p class="help">${t.help[0]}: <b>${t.help[1]}</b></p>` : ''}
+    <div class="links">${t.links.map(l => `<a class="btn sm" href="${l.u}" target="_blank" rel="noopener">${l.l}${icon('ext', 15)}</a>`).join('')}</div>
+  </section>`;
+}
+function sectionHTML(sec, t, v, key){
+  return sec === 'bring' ? bringSection(t, v, key) : sec === 'go' ? goSection(t, v) : sec === 'pay' ? paySection(t, v, key) : stepsSection(t, v);
+}
+
+/* guide: navigation */
+function saveNavInner(key){ const s = kit.includes(key); return `${icon(s ? 'bookmarked' : 'bookmark', 18)}<span>${s ? 'Saved to My kit' : 'Save to My kit'}</span>`; }
+function saveNextInner(key){ const s = kit.includes(key); return `<span><small>${s ? 'Saved' : 'All done'}</small><b>${s ? 'Saved to My kit' : 'Save this trip to My kit'}</b></span>${icon(s ? 'bookmarked' : 'bookmark', 20)}`; }
+function nextNav(t, v, key, sec){
+  const n = SECS[SECS.indexOf(sec) + 1];
+  if(n) return `<a class="nextbtn" href="#${t.id}.${v.id}.${n}"><span><small>Next</small><b>${SECL[n]}: ${secTitle(n, t, v)}</b></span>${icon('arrow', 20)}</a>`;
+  return `<button type="button" class="nextbtn" data-save="${key}" data-kind="next">${saveNextInner(key)}</button>`;
+}
+function navRow(t, v, sec, active, b, e){
+  const on = active === sec;
+  return `<a class="trow${on ? ' on' : ''}" href="#${t.id}.${v.id}.${sec}" style="--c:var(${SECV[sec]})"${on ? ' aria-current="true"' : ''}><i class="glow"></i><span class="tl"><small>${SECL[sec]}</small><b data-n${sec}>${b}</b><em data-e${sec}>${e}</em></span>${chev()}</a>`;
+}
+function navCard(t, v, key, active){
+  const st = checks[key] || {}, pr = progress(v, st), p = getPay(t, v), g = goLine(t, v);
+  const C = 2 * Math.PI * 36, frac = pr.total ? pr.done / pr.total : 1;
+  const payMain = p.total || (p.official === 0 ? 'Free' : inr(p.official));
+  const paySub = t.id === 'itr' ? 'Late fee. Filing is free.' : t.id === 'rent' ? 'e-stamp duty' : p.official === 0 ? 'On the official site' : 'Official fee';
+  return `<aside class="trip glass${pr.done === pr.total ? ' ready' : ''}" aria-label="Your trip" data-trip="${key}">
+    <div class="trip-top">
+      <div class="ring"><svg viewBox="0 0 86 86" width="86" height="86" aria-hidden="true"><circle cx="43" cy="43" r="36" class="rt"/><circle cx="43" cy="43" r="36" class="rp" stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="${(C * (1 - frac)).toFixed(2)}" data-ring/></svg><b data-ringtxt>${pr.done}/${pr.total}</b></div>
+      <div><p class="eyebrow">Your trip</p><h3>${t.name}</h3><p class="muted">${v.label}</p></div>
+    </div>
+    <nav class="tnav" aria-label="Guide sections">
+      ${navRow(t, v, 'bring', active, pr.done + ' of ' + pr.total + ' ready', pr.done === pr.total ? 'You’re ready to go' : secTitle('bring', t, v))}
+      ${navRow(t, v, 'go', active, g.main, g.sub)}
+      ${navRow(t, v, 'pay', active, payMain, paySub)}
+      ${navRow(t, v, 'steps', active, plural(v.steps.length, 'step'), plural(v.watch.length, 'thing') + ' to watch for')}
+    </nav>
+    <div class="trip-actions">
+      <button class="btn primary" type="button" data-save="${key}" data-kind="nav">${saveNavInner(key)}</button>
+      <button class="btn" type="button" data-copy="${key}">${icon('copy', 18)}<span>Copy checklist</span></button>
+    </div>
+    <p class="fine">Saved on this device only. No sign-up.</p>
+  </aside>`;
+}
+function guideHeader(t, v, sec, M){
+  const href = x => `#${t.id}.${x.id}${!M && sec ? '.' + sec : ''}`;
+  let chips = '';
+  if(t.variants.length > 1){
+    chips = M
+      ? `<div class="vscroll" role="group" aria-label="Choose your case">${t.variants.map(x => `<a class="chip" href="${href(x)}"${x.id === v.id ? ' aria-current="true"' : ''}>${x.label}</a>`).join('')}</div>`
+      : `<nav class="variants glass" aria-label="Choose your case">${t.variants.map(x => `<a class="vbtn" href="${href(x)}"${x.id === v.id ? ' aria-current="true"' : ''}>${x.label}</a>`).join('')}</nav>`;
+  }
+  if(M) return `<section class="mh"><div class="mh-title"><span class="ti">${icon(t.icon, 22)}</span><div><p class="eyebrow">${t.authority}</p><h1>${t.title}</h1></div></div>${chips}<p class="msum">${v.summary}</p></section>`;
+  return `<section class="gh">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="#home">Guides</a><span aria-hidden="true">/</span><span>${t.name}</span></nav>
+    <div class="gtitle"><span class="ti big">${icon(t.icon, 28, 1.6)}</span><div><p class="eyebrow">${t.authority}</p><h1>${t.title}</h1></div></div>
+    ${chips}
+    <p class="gsum">${v.summary}</p>
+  </section>`;
+}
+function renderGuide(r){
+  const t = T[r.task], v = vOf(t, r.variant), key = t.id + '.' + v.id, M = mobile();
+  const sec = SECS.includes(r.section) ? r.section : null;
+  if(M){
+    if(!sec) return guideHeader(t, v, null, true) + `<div class="hub">${navCard(t, v, key, null)}</div>`;
+    return `<a class="back" href="#${t.id}.${v.id}">${backIcon}<span>${t.name} · ${v.label}</span></a>
+      <div class="msec">${sectionHTML(sec, t, v, key)}${nextNav(t, v, key, sec)}</div>`;
+  }
+  const s = sec || 'bring';
+  return guideHeader(t, v, s, false) + `<div class="guide2">${navCard(t, v, key, s)}<div class="gpanel glass" data-panel="${s}">${sectionHTML(s, t, v, key)}${nextNav(t, v, key, s)}</div></div>`;
+}
+
+/* best time */
+function officeList(sel){
+  const ids = Object.keys(OFFICES).filter(i => ui.filter === 'all' || OFFICES[i].task === ui.filter);
+  return `<div class="ofilter" role="group" aria-label="Filter offices">${[['all','All'],['aadhaar','Aadhaar'],['passport','Passport']].map(f => `<button type="button" class="chip" data-filter="${f[0]}" aria-pressed="${ui.filter === f[0]}">${f[1]}</button>`).join('')}</div>
+    ${ids.map(id => { const x = OFFICES[id]; return `<a class="ocard" href="#timing.${id}"${id === sel ? ' aria-current="true"' : ''}><span class="ti">${icon(T[x.task].icon, 20)}</span><span class="oc"><b>${x.short}</b><small>${x.area}</small>${nowLine(id)}</span>${chev()}</a>`; }).join('')}
+    <p class="fine">More offices join in the next pilot phase.</p>`;
+}
+function officeDetail(sel, M){
+  const o = OFFICES[sel], t = T[o.task];
+  return `<section class="odetail${M ? '' : ' glass'}" aria-labelledby="od-h">
+    <div class="odhead"><div><p class="eyebrow">${t.name}</p><h2 id="od-h">${o.short}</h2><p class="muted">${o.area}</p></div>${nowPill(sel)}</div>
+    ${bestBoard(sel)}
+    ${heatmap(sel)}
+    ${officeAddr(sel)}
+    <a class="nextbtn" href="#${o.task}.${t.variants[0].id}.go"><span><small>Guide</small><b>Open the ${t.name} guide</b></span>${icon('arrow', 20)}</a>
+  </section>`;
+}
+function renderTiming(r){
+  const ids = Object.keys(OFFICES), M = mobile(), has = !!OFFICES[r.sub];
+  if(M && has) return `<a class="back" href="#timing">${backIcon}<span>All offices</span></a>${officeDetail(r.sub, true)}`;
+  const head = `<section class="phead"><p class="eyebrow">Best time to go</p><h1>Skip the rush hour.</h1>${M ? '' : '<p class="lede">Estimated rush for every hour each pilot office is open. Pick an office to see its calmest slot.</p>'}</section>`;
+  if(M) return head + `<div class="olist">${officeList(null)}</div>`;
+  const sel = has ? r.sub : (ui.filter !== 'all' ? ids.find(i => OFFICES[i].task === ui.filter) : ids[0]);
+  return head + `<div class="timing"><div class="olist">${officeList(sel)}</div>${officeDetail(sel, false)}</div>`;
+}
+
+/* fair price */
+function feeTable(){
+  const rows = TASKS.map(t => t.variants.map(v => {
+    const dyn = !!v.pay.dynamic, pp = v.pay;
+    const off = dyn ? 'Free + late fee' : (pp.total || (pp.official === 0 ? 'Free' : inr(pp.official)));
+    const fair = dyn ? 'Late fee + ₹1,500' : inr(pp.fairHi);
+    const ov = dyn ? 'Late fee + ₹3,000' : inr(pp.over);
+    return `<tr><td><a href="#${t.id}.${v.id}.pay">${t.name}</a><small>${v.label}</small></td><td class="n">${off}</td><td class="n">${fair}</td><td class="n">${ov}</td></tr>`;
+  }).join('')).join('');
+  return `<details class="more"><summary>${icon('layers', 18)}<span>See every official fee</span>${chev()}</summary><div class="mbody"><div class="ftable-wrap"><table class="ftable"><thead><tr><th>Task</th><th class="n">Official</th><th class="n">Fair up to</th><th class="n">Overcharged above</th></tr></thead><tbody>${rows}</tbody></table></div><p class="fine">Fair ranges are pilot estimates for paid help with forms and booking.</p></div></details>`;
+}
+function renderFees(){
+  const k = keyParts(ui.chk.key), p = getPay(k.t, k.v), M = mobile();
+  const head = `<section class="phead"><p class="eyebrow">Fair price check</p><h1>Is this quote fair?</h1>${M ? '' : `<p class="lede">Type what you were asked to pay. We compare it with the official fee, checked on ${CHECKED}.</p>`}</section>`;
+  const amount = `<div class="field"><label for="fq-in">Amount you were quoted</label>${qin('fq-in', ui.chk.q, 'data-chk-q', ui.chk.example)}</div>`;
+  if(M) return head + `<div class="fm">
+      <div class="field"><label for="fq-sel">Task</label><select class="sel" id="fq-sel" data-chk-sel>${variantOptions(ui.chk.key)}</select></div>
+      ${k.t.id === 'itr' ? itrSeg() : ''}
+      ${amount}
+      <div class="qout" data-qc="chk"><div class="qout" data-qout>${quoteOut(p, ui.chk.q, ui.chk.example)}</div></div>
+      ${feeTable()}
+    </div>`;
+  return head + `<div class="fees">
+    <div class="fpanel glass">
+      <div class="field"><span class="flabel">Task</span><div class="fchips" role="group" aria-label="Task">${TASKS.map(t => `<button type="button" class="chip" data-fee-task="${t.id}" aria-pressed="${k.t.id === t.id}">${t.name}</button>`).join('')}</div></div>
+      ${k.t.variants.length > 1 ? `<div class="field"><span class="flabel">Your case</span><div class="fchips" role="group" aria-label="Your case">${k.t.variants.map(v => `<button type="button" class="chip" data-fee-variant="${k.t.id}.${v.id}" aria-pressed="${k.v.id === v.id}">${v.label}</button>`).join('')}</div></div>` : ''}
+      ${k.t.id === 'itr' ? itrSeg() : ''}
+      ${amount}
+    </div>
+    <div class="fpanel glass" data-qc="chk"><div><p class="eyebrow">${k.t.name} · ${k.v.label}</p><h2 class="h3" style="margin:10px 0 0">Where your quote lands</h2></div><div class="qout" data-qout>${quoteOut(p, ui.chk.q, ui.chk.example)}</div><a class="btn sm" style="justify-self:start" href="#${k.t.id}.${k.v.id}.pay">Open the full guide${icon('arrow', 16)}</a></div>
+  </div>
+  <div style="margin-top:20px">${feeTable()}</div>`;
+}
+
+function renderKit(){
+  const items = kit.filter(k => { const [a] = k.split('.'); return T[a]; });
+  const head = `<section class="phead"><p class="eyebrow">My kit</p><h1>Your saved trips.</h1>${items.length ? `<p class="lede">${plural(items.length, 'trip')} saved on this device.</p>` : ''}</section>`;
+  if(!items.length) return head + `
+  <div class="empty glass"><span class="ti big">${icon('bookmark', 26)}</span><h2>Nothing saved yet</h2><p>Open a guide and tap Save to My kit. Your ticked items come along, so you can pack the night before.</p>
+    <div class="quick" style="margin-top:6px"><a class="chip" href="#aadhaar.address">Aadhaar address</a><a class="chip" href="#passport.fresh">First passport</a><a class="chip" href="#pan.instant">Free e-PAN</a></div></div>`;
+  return head + `<div class="kitgrid">${items.map(key => {
+    const { t, v } = keyParts(key), st = checks[key] || {}, pr = progress(v, st), p = getPay(t, v), g = goLine(t, v);
+    return `<article class="kcard glass">
+      <div class="khead"><span class="ti">${icon(t.icon, 22)}</span><div><b>${t.name}</b><small>${v.label}</small></div></div>
+      <div class="prog"><span><b>${pr.done}</b> of ${pr.total} ready</span><div class="bar"><i style="width:${pr.done / pr.total * 100}%"></i></div></div>
+      <dl class="krows" style="margin:0"><div class="tr" style="--c:var(--go)"><dt>Go</dt><dd>${g.main}<small>${g.sub}</small></dd></div><div class="tr" style="--c:var(--pay)"><dt>Pay</dt><dd>${p.total || (p.official === 0 ? 'Free' : inr(p.official))}<small>${t.id === 'itr' ? 'Late fee' : 'Official fee'}</small></dd></div></dl>
+      <div class="kact"><a class="btn primary sm" href="#${key}">Open${icon('arrow', 16)}</a><button class="btn sm" type="button" data-copy="${key}">${icon('copy', 16)}Copy</button><button class="btn sm" type="button" data-kit-remove="${key}">Remove</button></div>
+    </article>`; }).join('')}</div>`;
+}
+
+function renderAbout(){
+  return `
+  <section class="phead"><p class="eyebrow">About the pilot</p><h1>Every government task comes with three questions.</h1><p class="lede">What do I bring? When should I go? How much should it cost? The answers are scattered across portals, forwarded PDFs and the advice of whoever is standing outside the office. Bring Go Pay puts all three on one screen.</p></section>
+  <div class="abt3">
+    <div class="glass" style="--c:var(--bring)"><div class="pk"><i class="glow"></i>Bring</div><h3>One missing copy means a second trip</h3><p>Official lists are long and written for officers. People find out what they forgot at the counter, after the queue.</p></div>
+    <div class="glass" style="--c:var(--go)"><div class="pk"><i class="glow"></i>Go</div><h3>Half a working day in a queue</h3><p>Offices are packed at some hours and empty at others. Nobody tells you which, so everyone arrives at the same time.</p></div>
+    <div class="glass" style="--c:var(--pay)"><div class="pk"><i class="glow"></i>Pay</div><h3>Prices nobody can check</h3><p>Agents quote whatever they like. Most people don’t know the official fee, so they can’t tell a fair service charge from a markup.</p></div>
+  </div>
+  <section class="section" aria-labelledby="sdg-h">
+    <div class="sdg glass">
+      <div><p class="eyebrow">UN Sustainable Development Goal</p><div class="sdgnum" style="margin-top:14px">16</div><h3 id="sdg-h">Peace, justice and strong institutions</h3></div>
+      <ul class="targets">
+        <li><code>16.5</code><div><b>Reduce corruption and bribery</b><span>Published official fees make overcharging easy to spot and easy to refuse.</span></div></li>
+        <li><code>16.6</code><div><b>Effective, transparent institutions</b><span>Plain rules and realistic timings make public offices easier to use for everyone.</span></div></li>
+        <li><code>16.9</code><div><b>Legal identity for all</b><span>Aadhaar, PAN and passports get easier to obtain, especially for first-timers.</span></div></li>
+      </ul>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="pl-h">
+    <div class="sec-head"><div><p class="eyebrow">The pilot</p><h2 class="h2" id="pl-h" style="margin-top:12px">Start small in Bengaluru, then grow</h2></div></div>
+    <ol class="phases">
+      <li class="cur"><span class="state" style="--c:var(--go);justify-self:start">Now</span><b>Five guides, four offices</b><p>Aadhaar, PAN, passport, rent agreements and tax returns. Fees checked against official sources. Rush levels are estimates.</p></li>
+      <li><span class="state" style="--c:var(--bring);justify-self:start">Next</span><b>Real visitor data</b><p>A one-tap “How long did you wait?” after each visit replaces estimates with live reports. Guides in Kannada and Hindi.</p></li>
+      <li><span class="state" style="--c:var(--pay);justify-self:start">Later</span><b>More offices, more cities</b><p>Bangalore One centres, Sub-Registrar offices and a WhatsApp checklist. Then Mysuru, Hubballi and other cities.</p></li>
+    </ol>
+  </section>
+  <section class="section" aria-labelledby="m-h">
+    <div class="sec-head"><div><p class="eyebrow">How it pays for itself</p><h2 class="h2" id="m-h" style="margin-top:12px">Free for citizens, funded in layers</h2></div><p>Guides, timings and the price check stay free. Revenue comes from the people who benefit when paperwork goes smoothly.</p></div>
+    <div class="model">
+      <div><h3>B2B licences</h3><p>Colleges, employers and housing societies license guides for students, new hires and tenants who all need the same documents.</p></div>
+      <div><h3>Vetted helpers</h3><p>Verified agents pay a listing fee and agree to publish prices inside the fair range. Honest helpers get the customers.</p></div>
+      <div><h3>Paid pre-checks</h3><p>For a small fee, a reviewer checks your documents before you go, so your first trip is your last one.</p></div>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="tr-h">
+    <h2 class="sr" id="tr-h">Privacy and data</h2>
+    <div class="trust">
+      <div class="glass"><span class="ti">${icon('shield', 20)}</span><div><h3>Nothing to sign up for</h3><p>No account and no Aadhaar numbers. Your checklist and saved trips stay in this browser.</p></div></div>
+      <div class="glass"><span class="ti">${icon('layers', 20)}</span><div><h3>Clear about what’s estimated</h3><p>Fees are checked against UIDAI, MEA, Protean and the Income Tax Department. Rush levels and fair ranges are labelled as estimates.</p></div></div>
+    </div>
+  </section>`;
+}
+
+const PAGES = { home:renderHome, guide:renderGuide, timing:renderTiming, fees:renderFees, kit:renderKit, about:renderAbout };
+
+/* ───────────────────────── router ───────────────────────── */
+function parse(){
+  let h = location.hash.slice(1);
+  try{ h = decodeURIComponent(h); }catch(e){}
+  const [a, b, c] = h.split('.');
+  if(!a || a === 'home' || a === 'guides') return { page:'home', sub:a };
+  if(T[a]){
+    if(SECS.includes(b)) return { page:'guide', task:a, variant:undefined, section:b };
+    return { page:'guide', task:a, variant:b, section:c };
+  }
+  if(PAGES[a] && a !== 'guide') return { page:a, sub:b };
+  return { page:'home' };
+}
+let prev = null, featTimer = null;
+function route(){
+  const r = parse(), M = mobile();
+  r.m = M;
+  let keep = false;
+  if(prev && prev.page === r.page && prev.m === M){
+    if(r.page === 'guide') keep = prev.task === r.task && (!M || prev.section === r.section);
+    else if(r.page === 'timing') keep = !M || prev.sub === r.sub;
+    else keep = true;
+  }
+  const y = window.scrollY;
+  clearInterval(featTimer);
+  view.innerHTML = PAGES[r.page](r);
+  document.querySelectorAll('[data-nav]').forEach(a => {
+    const on = a.dataset.nav === r.page || (r.page === 'guide' && a.dataset.nav === 'home');
+    if(on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
+  if(keep){
+    window.scrollTo(0, y);
+    if(r.page === 'guide' && !M && prev.section !== r.section){
+      const pnl = view.querySelector('.gpanel');
+      if(pnl){ const top = pnl.getBoundingClientRect().top; if(top < 90) window.scrollTo(0, window.scrollY + top - 110); }
+    }
+  }else{
+    window.scrollTo(0, 0);
+    view.classList.remove('enter'); void view.offsetWidth; view.classList.add('enter');
+    if(prev) view.focus({ preventScroll:true });
+  }
+  if(r.page === 'home' && !M){ initGuilloche(); startFeat(); }
+  prev = r;
+}
+window.addEventListener('hashchange', route);
+MQ.addEventListener('change', route);
+
+/* ───────────────────────── interactions ───────────────────────── */
+function save(){ store.set('checks', checks); }
+function updateBring(key, before){
+  const { t, v } = keyParts(key), st = checks[key] || {}, pr = progress(v, st);
+  const sec = view.querySelector('#bring');
+  if(sec){
+    sec.querySelector('[data-progtxt]').innerHTML = `<b>${pr.done}</b> of ${pr.total} ready`;
+    sec.querySelector('[data-bar]').style.width = (pr.done / pr.total * 100) + '%';
+  }
+  const trip = view.querySelector('[data-trip]');
+  if(trip){
+    const C = 2 * Math.PI * 36;
+    trip.querySelector('[data-ring]').setAttribute('stroke-dashoffset', (C * (1 - pr.done / pr.total)).toFixed(2));
+    trip.querySelector('[data-ringtxt]').textContent = pr.done + '/' + pr.total;
+    trip.querySelector('[data-nbring]').textContent = pr.done + ' of ' + pr.total + ' ready';
+    trip.querySelector('[data-ebring]').textContent = pr.done === pr.total ? 'You’re ready to go' : secTitle('bring', t, v);
+    trip.classList.toggle('ready', pr.done === pr.total);
+  }
+  if(before && before.done < before.total && pr.done === pr.total) toast('All set. You’re ready to go.');
+}
+view.addEventListener('change', e => {
+  const cl = e.target.closest('[data-cl]');
+  if(cl){
+    const key = cl.dataset.cl, st = checks[key] || (checks[key] = {});
+    const before = progress(keyParts(key).v, st);
+    if(e.target.type === 'checkbox'){ const item = e.target.closest('[data-item]'); if(e.target.checked) st[item.dataset.item] = true; else delete st[item.dataset.item]; item.classList.toggle('done', e.target.checked); }
+    if(e.target.type === 'radio'){ const g = e.target.closest('[data-group]'); st[g.dataset.group] = +e.target.value; g.classList.add('done'); }
+    save(); updateBring(key, before);
+  }
+  if(e.target.matches('[data-chk-sel]')){ ui.chk.key = e.target.value; refreshChk(); }
+});
+view.addEventListener('pointerdown', e => { const r = e.target.closest('.opt'); if(r){ const inp = r.querySelector('input'); inp.dataset.was = inp.checked ? '1' : '0'; } });
+view.addEventListener('click', e => {
+  const opt = e.target.closest('.opt');
+  if(opt){
+    const inp = opt.querySelector('input');
+    if(inp.dataset.was === '1' && e.target === inp){
+      inp.checked = false; inp.dataset.was = '0';
+      const g = inp.closest('[data-group]'), key = inp.closest('[data-cl]').dataset.cl;
+      if(checks[key]) delete checks[key][g.dataset.group];
+      g.classList.remove('done'); save(); updateBring(key);
+    }
+  }
+}, true);
+view.addEventListener('toggle', e => {
+  const d = e.target;
+  if(d && d.matches && d.matches('details[data-heatd]')) ui.heatOpen = d.open;
+  if(d && d.matches && d.matches('details[data-qd]')){
+    ui.qopen[d.dataset.qd] = d.open;
+    if(d.open){ const inp = d.querySelector('input'); if(inp && !mobile()) setTimeout(() => inp.focus({ preventScroll:true }), 60); }
+  }
+}, true);
+
+function digits(v){ return v.replace(/[^\d]/g, '').slice(0, 7); }
+view.addEventListener('input', e => {
+  const q = e.target.closest('[data-quote]');
+  if(q){
+    const val = digits(q.value); if(q.value !== val) q.value = val;
+    const key = q.dataset.quote; ui.quote[key] = val;
+    const { t, v } = keyParts(key);
+    q.closest('[data-qc]').querySelector('[data-qout]').innerHTML = quoteOut(getPay(t, v), val);
+  }
+  const c = e.target.closest('[data-chk-q]');
+  if(c){
+    const val = digits(c.value); if(c.value !== val) c.value = val;
+    ui.chk.q = val; ui.chk.example = false;
+    view.querySelectorAll('[data-ex]').forEach(x => x.remove());
+    refreshChk(true);
+  }
+});
+function refreshChk(onlyOut){
+  const k = keyParts(ui.chk.key), p = getPay(k.t, k.v);
+  if(!onlyOut && prev && prev.page === 'fees'){ route(); return; }
+  view.querySelectorAll('[data-qc="chk"] [data-qout]').forEach(el => el.innerHTML = quoteOut(p, ui.chk.q, ui.chk.example));
+}
+function paintSave(key){
+  view.querySelectorAll('[data-save]').forEach(b => { if(b.dataset.save === key) b.innerHTML = b.dataset.kind === 'next' ? saveNextInner(key) : saveNavInner(key); });
+}
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-open-palette],[data-theme-toggle],[data-feat],[data-office],[data-filter],[data-fee-task],[data-fee-variant],[data-itr],[data-save],[data-copy],[data-kit-remove],[data-close-copy],.cell');
+  if(!el) return;
+  if(el.matches('[data-open-palette]')) return openPalette(el);
+  if(el.matches('[data-theme-toggle]')) return toggleTheme();
+  if(el.matches('[data-close-copy]')) return closeCopy();
+  if(el.matches('[data-feat]')){ setFeat(+el.dataset.feat); startFeat(); return; }
+  if(el.matches('[data-office]')){
+    const t = T[el.dataset.task]; ui.office[t.id] = el.dataset.office; store.set('office', ui.office);
+    el.parentElement.querySelectorAll('[data-office]').forEach(b => b.setAttribute('aria-pressed', b === el));
+    view.querySelector('[data-officebody]').innerHTML = officeBlock(el.dataset.office);
+    view.querySelector('[data-nowslot]').innerHTML = nowPill(el.dataset.office);
+    const g = goLine(t, vOf(t, prev.variant));
+    const n = view.querySelector('[data-ngo]'), s = view.querySelector('[data-ego]');
+    if(n){ n.textContent = g.main; s.textContent = g.sub; }
+    return;
+  }
+  if(el.matches('[data-filter]')){
+    ui.filter = el.dataset.filter;
+    if(mobile()){ route(); return; }
+    const first = Object.keys(OFFICES).find(i => ui.filter === 'all' || OFFICES[i].task === ui.filter);
+    if(location.hash !== '#timing.' + first) location.hash = 'timing.' + first; else route();
+    return;
+  }
+  if(el.matches('[data-fee-task]')){ const t = T[el.dataset.feeTask]; ui.chk.key = t.id + '.' + t.variants[0].id; route(); return; }
+  if(el.matches('[data-fee-variant]')){ ui.chk.key = el.dataset.feeVariant; route(); return; }
+  if(el.matches('[data-itr]')){ ui.itr = el.dataset.itr; store.set('itr', ui.itr); route(); return; }
+  if(el.matches('[data-save]')){
+    const key = el.dataset.save, i = kit.indexOf(key);
+    if(i >= 0) kit.splice(i, 1); else kit.unshift(key);
+    store.set('kit', kit); paintSave(key);
+    toast(i < 0 ? 'Saved to My kit' : 'Removed from My kit');
+    return;
+  }
+  if(el.matches('[data-kit-remove]')){ kit = kit.filter(k => k !== el.dataset.kitRemove); store.set('kit', kit); route(); toast('Removed from My kit'); return; }
+  if(el.matches('[data-copy]')) return copyChecklist(el.dataset.copy);
+  if(el.matches('.cell')) return showCell(el, true);
+});
+function showCell(el, select){
+  const heat = el.closest('[data-heat]'), oid = heat.dataset.heat, o = OFFICES[oid], p = PROFILE[o.kind];
+  const d = +el.dataset.d, s = +el.dataset.s, v = crowd(oid, d, s), lv = level(v);
+  if(select){ heat.querySelectorAll('.cell.sel').forEach(c => c.classList.remove('sel')); el.classList.add('sel'); }
+  const det = heat.closest('.heat-wrap').parentElement.querySelector('[data-hdetail]');
+  if(det) det.innerHTML = `<b>${DAYS_LONG[d]}, ${fmtTime(p.start + s, true)}</b> · ${LEVELS[lv]} · about ${mins(oid, v)} min ${p.unit}${p.lastFlag && s === p.slots - 1 ? ' · tokens can stop before closing' : ''}`;
+}
+view.addEventListener('pointerover', e => { const c = e.target.closest('.cell'); if(c && e.pointerType === 'mouse') showCell(c, false); });
+view.addEventListener('focusin', e => { const c = e.target.closest('.cell'); if(c) showCell(c, false); });
+
+/* spotlight */
+let spotRAF = 0;
+document.addEventListener('pointermove', e => {
+  if(spotRAF || e.pointerType !== 'mouse') return;
+  spotRAF = requestAnimationFrame(() => {
+    spotRAF = 0;
+    const s = e.target.closest && e.target.closest('.spot'); if(!s) return;
+    const r = s.getBoundingClientRect();
+    s.style.setProperty('--mx', (e.clientX - r.left) + 'px'); s.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  });
+}, { passive:true });
+
+/* toast */
+let toastT = 0;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.innerHTML = icon('check', 18, 2.4) + '<span>' + msg + '</span>';
+  t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2300);
+}
+
+/* copy */
+function checklistText(key){
+  const { t, v } = keyParts(key), st = checks[key] || {}, p = getPay(t, v), g = goLine(t, v);
+  const lines = [t.name + ' · ' + v.label, '', 'BRING'];
+  v.bring.forEach(it => {
+    const done = it.pick ? st[it.id] != null : !!st[it.id];
+    lines.push((done ? '[x] ' : '[ ] ') + it.t + (it.pick && st[it.id] != null ? ': ' + it.pick[st[it.id]] : '') + (it.opt ? ' (if needed)' : ''));
+  });
+  lines.push('', 'GO', g.main + ' · ' + g.sub, '', 'PAY', (p.totalLabel || 'Official fee') + ': ' + (p.total || (p.official === 0 ? 'Free' : inr(p.official))), 'Fair with help: up to ' + inr(p.fairHi), '', 'Fees checked ' + CHECKED + ' on Bring Go Pay. Confirm on the official site before paying.');
+  return lines.join('\n');
+}
+let lastFocus = null;
+function copyChecklist(key){
+  const text = checklistText(key);
+  const fallback = () => {
+    const m = document.getElementById('copym'), ta = document.getElementById('copym-text');
+    lastFocus = document.activeElement; ta.value = text; m.hidden = false; root.style.overflow = 'hidden';
+    setTimeout(() => { ta.focus(); ta.select(); }, 30);
+  };
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => toast('Checklist copied. Paste it anywhere.'), fallback);
+    else fallback();
+  }catch(err){ fallback(); }
+}
+function closeCopy(){ document.getElementById('copym').hidden = true; root.style.overflow = ''; if(lastFocus) lastFocus.focus(); }
+document.getElementById('copym').addEventListener('click', e => { if(e.target.id === 'copym') closeCopy(); });
+
+/* theme */
+const themeBtn = document.querySelector('[data-theme-toggle]');
+function effTheme(){ const a = root.getAttribute('data-theme'); if(a === 'light' || a === 'dark') return a; return matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; }
+function paintThemeBtn(){ const d = effTheme() === 'dark'; themeBtn.innerHTML = icon(d ? 'sun' : 'moon', 19); themeBtn.setAttribute('aria-label', d ? 'Switch to light theme' : 'Switch to dark theme'); }
+function toggleTheme(){ const n = effTheme() === 'dark' ? 'light' : 'dark'; root.setAttribute('data-theme', n); store.set('theme', n); paintThemeBtn(); drawGuilloche(1); }
+const savedTheme = store.get('theme', null); if(savedTheme === 'light' || savedTheme === 'dark') root.setAttribute('data-theme', savedTheme);
+paintThemeBtn();
+matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { paintThemeBtn(); drawGuilloche(1); });
+new MutationObserver(() => { paintThemeBtn(); drawGuilloche(1); }).observe(root, { attributes:true, attributeFilter:['data-theme'] });
+
+/* guilloche: the security-paper rosette behind the hero ticket */
+let gRAF = 0;
+function drawGuilloche(prog){
+  const c = document.getElementById('guilloche'); if(!c) return;
+  const w = c.clientWidth, h = c.clientHeight; if(!w || !h) return;
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  if(c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)){ c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); }
+  const ctx = c.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+  ctx.strokeStyle = getComputedStyle(root).getPropertyValue('--guilloche').trim() || 'rgba(160,170,255,.2)';
+  const cx = w / 2, cy = h / 2, R = Math.min(w, h) * .47, steps = 900, lim = Math.max(2, Math.floor(steps * prog));
+  ctx.lineWidth = .8;
+  for(let k = 0; k < 24; k++){
+    const ph = k / 24 * Math.PI * 2;
+    ctx.beginPath();
+    for(let i = 0; i <= lim; i++){
+      const a = i / steps * Math.PI * 2;
+      const r = R * (.66 + .16 * Math.sin(9 * a + ph) + .07 * Math.sin(23 * a - 2 * ph));
+      const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+  }
+  ctx.lineWidth = .6;
+  for(let k = 0; k < 14; k++){
+    const ph = k / 14 * Math.PI * 2;
+    ctx.beginPath();
+    for(let i = 0; i <= lim; i++){
+      const a = i / steps * Math.PI * 2;
+      const r = R * (.3 + .07 * Math.sin(12 * a + ph));
+      const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+  }
+}
+let gDrawn = false;
+function initGuilloche(){
+  cancelAnimationFrame(gRAF);
+  if(gDrawn || RM.matches){ drawGuilloche(1); gDrawn = true; return; }
+  const t0 = performance.now(), dur = 1800;
+  const tick = now => { const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); drawGuilloche(e); if(k < 1) gRAF = requestAnimationFrame(tick); else gDrawn = true; };
+  gRAF = requestAnimationFrame(tick);
+}
+let rT = 0; window.addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(() => drawGuilloche(1), 120); });
+
+/* hero ticket rotation */
+let featPaused = false;
+function setFeat(i){
+  ui.feat = i;
+  const tk = document.getElementById('ticket'); if(!tk) return;
+  document.querySelectorAll('[data-feat]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.feat === i));
+  if(RM.matches){ tk.innerHTML = ticketHTML(i); return; }
+  tk.classList.add('swap');
+  setTimeout(() => { tk.innerHTML = ticketHTML(i); tk.classList.remove('swap'); }, 260);
+}
+function startFeat(){
+  clearInterval(featTimer);
+  if(RM.matches) return;
+  const tk = document.getElementById('ticket'); if(!tk) return;
+  tk.onmouseenter = () => featPaused = true; tk.onmouseleave = () => featPaused = false;
+  featTimer = setInterval(() => { if(!featPaused && !document.hidden) setFeat((ui.feat + 1) % FEATURES.length); }, 6000);
+}
+
+/* command palette */
+const INDEX = [];
+TASKS.forEach(t => t.variants.forEach(v => INDEX.push({ g:'Guides', icon:t.icon, title:t.name + ': ' + v.label, sub:v.summary, href:'#' + t.id + '.' + v.id, hay:(t.name + ' ' + t.title + ' ' + v.label + ' ' + v.kw).toLowerCase(), pop: v === t.variants[0] })));
+[ { icon:'clock', title:'Best time to go', sub:'Estimated rush by hour for each pilot office', href:'#timing', hay:'best time timing crowd rush queue wait hours office open now' },
+  { icon:'rupee', title:'Fair price check', sub:'Is this quote fair? Official fees for every task', href:'#fees', hay:'fair price check fee cost quote agent overcharged official fees money' },
+  { icon:'bookmark', title:'My kit', sub:'Your saved trips and checklists', href:'#kit', hay:'my kit saved trips checklist bookmarks' },
+  { icon:'info', title:'About Bring Go Pay', sub:'The pilot, SDG 16 and how it’s funded', href:'#about', hay:'about pilot sdg team business model privacy' } ].forEach(x => INDEX.push(Object.assign({ g:'Pages', pop:true }, x)));
+Object.entries(OFFICES).forEach(([id, o]) => INDEX.push({ g:'Offices', icon:'pin', title:o.short, sub:o.area, href:'#timing.' + id, hay:(o.name + ' ' + o.short + ' ' + o.area + ' ' + o.addr + ' ' + o.task).toLowerCase() }));
+const pal = document.getElementById('pal'), palQ = document.getElementById('pal-q'), palList = document.getElementById('pal-list');
+let palItems = [], palSel = 0, palOpener = null;
+function palSearch(q){
+  q = q.trim().toLowerCase().replace(/aadhar/g, 'aadhaar');
+  if(!q) return INDEX.filter(x => x.pop);
+  const toks = q.split(/\s+/);
+  return INDEX.map(x => {
+    const tl = x.title.toLowerCase(), hay = x.hay.replace(/aadhar\b/g, 'aadhaar') + ' ' + tl;
+    if(!toks.every(tk => hay.includes(tk))) return null;
+    let sc = 0; toks.forEach(tk => { if(tl.includes(tk)) sc += 3; if(tl.startsWith(tk)) sc += 2; });
+    return { x, sc };
+  }).filter(Boolean).sort((a, b) => b.sc - a.sc).slice(0, 9).map(o => o.x);
+}
+function palRender(){
+  palItems = palSearch(palQ.value);
+  if(palSel >= palItems.length) palSel = 0;
+  if(!palItems.length){ palList.innerHTML = `<li class="pal-empty">Nothing matches yet. Try “address”, “renew” or “late tax”.</li>`; return; }
+  let g = '', html = '';
+  palItems.forEach((x, i) => {
+    if(x.g !== g){ g = x.g; html += `<li class="pal-group" role="presentation">${g}</li>`; }
+    html += `<li role="option" id="po-${i}" aria-selected="${i === palSel}"><a class="pal-item" href="${x.href}" data-pi="${i}" tabindex="-1"><span class="ti">${icon(x.icon, 18)}</span><span style="min-width:0"><b>${x.title}</b><small>${x.sub}</small></span>${icon('arrow', 16).replace('class="ic"', 'class="ic ar"')}</a></li>`;
+  });
+  palList.innerHTML = html;
+  palList.querySelectorAll('[role="option"]').forEach(li => { const a = li.querySelector('a'); if(+a.dataset.pi === palSel) a.setAttribute('aria-selected', 'true'); });
+  palQ.setAttribute('aria-activedescendant', 'po-' + palSel);
+}
+function palMove(d){
+  palSel = (palSel + d + palItems.length) % palItems.length;
+  palList.querySelectorAll('.pal-item').forEach(a => a.setAttribute('aria-selected', +a.dataset.pi === palSel));
+  palList.querySelectorAll('[role="option"]').forEach(li => li.setAttribute('aria-selected', li.id === 'po-' + palSel));
+  const a = palList.querySelector(`[data-pi="${palSel}"]`); if(a) a.scrollIntoView({ block:'nearest' });
+  palQ.setAttribute('aria-activedescendant', 'po-' + palSel);
+}
+function openPalette(opener){
+  palOpener = opener || document.activeElement; pal.hidden = false; root.style.overflow = 'hidden';
+  palQ.value = ''; palSel = 0; palRender(); setTimeout(() => palQ.focus(), 20);
+}
+function closePalette(){ pal.hidden = true; root.style.overflow = ''; if(palOpener && palOpener.focus) palOpener.focus({ preventScroll:true }); }
+palQ.addEventListener('input', () => { palSel = 0; palRender(); });
+palQ.addEventListener('keydown', e => {
+  if(e.key === 'ArrowDown'){ e.preventDefault(); palMove(1); }
+  else if(e.key === 'ArrowUp'){ e.preventDefault(); palMove(-1); }
+  else if(e.key === 'Enter'){ e.preventDefault(); const x = palItems[palSel]; if(x){ closePalette(); location.hash = x.href.slice(1); } }
+});
+pal.addEventListener('click', e => { if(e.target === pal) return closePalette(); const a = e.target.closest('.pal-item'); if(a){ closePalette(); } });
+pal.addEventListener('pointermove', e => { const a = e.target.closest('.pal-item'); if(a && +a.dataset.pi !== palSel){ palSel = +a.dataset.pi; palMove(0); } });
+document.addEventListener('keydown', e => {
+  if((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey)){ e.preventDefault(); pal.hidden ? openPalette() : closePalette(); return; }
+  if(e.key === '/' && pal.hidden && !/input|textarea|select/i.test(document.activeElement.tagName)){ e.preventDefault(); openPalette(); return; }
+  if(e.key === 'Escape'){ if(!pal.hidden) closePalette(); else if(!document.getElementById('copym').hidden) closeCopy(); }
+});
+const kb = document.querySelector('[data-kbd]'); if(kb && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) kb.textContent = '⌘K';
+
+document.querySelector('[data-skip]').addEventListener('click', e => { e.preventDefault(); view.focus(); });
+route();
+})();
+</script>
+
+</body>
+</html>
